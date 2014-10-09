@@ -13,13 +13,13 @@ public class Maze extends Grid {
 		String disp = "";
 
 		// Add top border
-		disp += new String(new char[getWidth() + 2]).replace("\0", "██");
+		disp += new String(new char[getWidth() + 2]).replace("\0", "[]");
 
 		// Loop maze rows
 		for (int y = 0; y < getHeight(); y++) {
 
 			// Add left border
-			disp += "\n██";
+			disp += "\n[]";
 
 			// Loop maze columns
 			for (int x = 0; x < getWidth(); x++) {
@@ -27,12 +27,12 @@ public class Maze extends Grid {
 			}
 
 			// Add right border
-			disp += "██";
+			disp += "[]";
 
 		}
 
 		// Add bottom border
-		disp += "\n" + new String(new char[getWidth() + 2]).replace("\0", "██");
+		disp += "\n" + new String(new char[getWidth() + 2]).replace("\0", "[]");
 
 		return disp;
 	}

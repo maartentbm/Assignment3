@@ -13,7 +13,7 @@ public class InaccessibleNode extends Node {
 	
 	@Override
 	public String toString() {
-		return "██";
+		return "[]";
 	}
 
 }
