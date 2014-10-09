@@ -47,3 +47,4 @@ public abstract class Ant {
 	abstract public void run(Maze maze,int[] startLocation,int[] goalLocation);
 
 }
+

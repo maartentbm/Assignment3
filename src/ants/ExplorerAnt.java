@@ -23,11 +23,22 @@ public class ExplorerAnt extends Ant {
 			}
 		}
 		
-		public void lookNorth()){
+		
+		public void lookEast(){
 			int[] checkLocation = location;
 			for(int i = -1; i < 2; i++){ 
 				checkLocation[0] = location[0] + i;
-				checkLocation[1] = location[1] + abs(i)-1;
+				checkLocation[1] = location[1] - i^2 + 1;
+				maze.getNode(checkLocation).isAccsessible;
+			}
+		}
+		
+		public void lookNorth(){
+			int[] checkLocation = location;
+			for(int i = -1; i < 2; i++){ 
+				checkLocation[0] = location[0] - i^2 + 1;
+				checkLocation[1] = location[1] - i;
+				maze.getNode(checkLocation).isAccessible();
 			}
 		}
 		
