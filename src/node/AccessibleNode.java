@@ -2,8 +2,8 @@ package node;
 
 public class AccessibleNode extends Node {
 
-	public AccessibleNode(int x, int y) {
-		super(x, y);
+	public AccessibleNode(int[] loc) {
+		super(loc);
 	}
 
 	@Override

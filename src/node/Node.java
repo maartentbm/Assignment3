@@ -3,12 +3,11 @@ package node;
 public abstract class Node {
 
 	private Node north, east, south, west;
-	private int x, y;
+	private int[] location;
 	private double pheromoneLevel;
 	
-	public Node(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public Node(int[] loc) {
+		this.location = loc;
 		
 		// Initial pheromone level = 0
 		this.pheromoneLevel = 0;
@@ -46,20 +45,12 @@ public abstract class Node {
 		this.west = west;
 	}
 	
-	public int getX() {
-		return x;
+	public int[] getLocation() {
+		return this.location;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
+	public void setLocation(int[] loc) {
+		this.location = loc;
 	}
 
 	public double getPheromoneLevel() {

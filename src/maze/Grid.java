@@ -39,8 +39,8 @@ public class Grid {
 		this.height = height;
 	}
 
-	public Node getNode(int x, int y) {
-		return this.grid[y][x];
+	public Node getNode(int[] loc) {
+		return this.grid[loc[1]][loc[0]];
 	}
 	
 	public void setNode(Node n, int x, int y) {

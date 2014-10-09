@@ -71,7 +71,7 @@ public class MazeParser {
 					}
 
 					// Add Node to grid
-					grid[y][x] = NodeFactory.createNode(sc.nextInt(), x, y);
+					grid[y][x] = NodeFactory.createNode(sc.nextInt(), new int[]{ x, y });
 					
 					// Increase x-coord
 					x++;
