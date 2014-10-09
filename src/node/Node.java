@@ -4,13 +4,21 @@ public abstract class Node {
 
 	private Node north, east, south, west;
 	private int[] location;
-	private double pheromoneLevel;
 	
+	/**
+	 * Pheromone level. Array index == direction.
+	 * 0 -> EAST
+	 * 1 -> NORTH
+	 * 2 -> WEST
+	 * 3 -> SOUTH
+	 */
+	private double[] pheromoneLevel;
+
 	public Node(int[] loc) {
 		this.location = loc;
-		
+
 		// Initial pheromone level = 0
-		this.pheromoneLevel = 0;
+		this.pheromoneLevel = new double[] { 0, 0, 0, 0 };
 	}
 
 	public Node getNorth() {
@@ -44,7 +52,7 @@ public abstract class Node {
 	public void setWest(Node west) {
 		this.west = west;
 	}
-	
+
 	public int[] getLocation() {
 		return this.location;
 	}
@@ -53,12 +61,51 @@ public abstract class Node {
 		this.location = loc;
 	}
 
-	public double getPheromoneLevel() {
-		return pheromoneLevel;
+	/**
+	 * Get the pheromone level of a given connection.
+	 * @param dir
+	 * @return
+	 */
+	public double getPheromoneLevel(int dir) {
+		return pheromoneLevel[dir];
 	}
 
-	public void setPheromoneLevel(double p) {
-		this.pheromoneLevel = p;
+	/**
+	 * Increase the pheromone level of a given direction by any real value.
+	 * @param dir
+	 * @param p
+	 */
+	public void updatePheromoneLevel(int dir, double p) {
+		
+		// Set pheromone level
+		this.pheromoneLevel[dir] += p;
+		
+		// Get 'flipped' direction
+		int flipped = dir + 2 % 4;
+		
+		// Update pheromone level on neighbour
+		switch(flipped) {
+		case 0:
+			getEast().updatePheromoneLevel(flipped, p);
+			break;
+		case 1:
+			getNorth().updatePheromoneLevel(flipped, p);
+			break;
+		case 2:
+			getWest().updatePheromoneLevel(flipped, p);
+			break;
+		case 3:
+			getSouth().updatePheromoneLevel(flipped, p);
+			break;
+		}
+	}
+
+	/**
+	 * Return array of Node neighbours.
+	 * @return
+	 */
+	public Node[] getNeighbours() {
+		return new Node[] { getEast(), getNorth(), getWest(), getSouth() };
 	}
 
 	public abstract boolean isAccessible();

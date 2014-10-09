@@ -1,9 +1,6 @@
 package maze;
 
-
 public class Maze extends Grid {
-
-	private double[][] pheromoneLevel;
 	
 	public Maze() {
 	}
