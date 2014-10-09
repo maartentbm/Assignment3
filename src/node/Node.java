@@ -60,6 +60,15 @@ public abstract class Node {
 	public void setPheromoneLevel(double p) {
 		this.pheromoneLevel = p;
 	}
+	
+	public Node[] getNeighbours() {
+		return new Node[]{
+			getEast(),
+			getNorth(),
+			getWest(),
+			getSouth()
+		};
+	}
 
 	public abstract boolean isAccessible();
 

@@ -23,8 +23,7 @@ public class MazeParser {
 		try {
 			r = this._prepareFileRead(f);
 		} catch (FileNotFoundException e) {
-			System.out.println("File read could not be prepared. Reason: "
-					+ e.getMessage());
+			System.out.println("File read could not be prepared. Reason: " + e.getMessage());
 			return m;
 		}
 
@@ -36,6 +35,9 @@ public class MazeParser {
 		// Create and set grid
 		Node[][] grid = this._makeGrid(r, m.getWidth(), m.getHeight());
 		m.setGrid(grid);
+
+		// Link nodes
+		this._linkNodes(m);
 
 		// Return maze
 		return m;
@@ -65,14 +67,12 @@ public class MazeParser {
 
 					// Check boundaries
 					if (x >= width) {
-						System.out
-								.println("Error: maze exceeds predefined width at line "
-										+ y + ".");
+						System.out.println("Error: maze exceeds predefined width at line " + y + ".");
 					}
 
 					// Add Node to grid
-					grid[y][x] = NodeFactory.createNode(sc.nextInt(), new int[]{ x, y });
-					
+					grid[y][x] = NodeFactory.createNode(sc.nextInt(), new int[] { x, y });
+
 					// Increase x-coord
 					x++;
 				}
@@ -125,8 +125,7 @@ public class MazeParser {
 			}
 
 		} catch (IOException e) {
-			System.out.println("Maze file could not be read. Reason: "
-					+ e.getMessage());
+			System.out.println("Maze file could not be read. Reason: " + e.getMessage());
 		}
 
 		return new int[0];
@@ -151,8 +150,7 @@ public class MazeParser {
 			}
 
 		} catch (IOException e) {
-			System.out.println("Maze file could not be read. Reason: "
-					+ e.getMessage());
+			System.out.println("Maze file could not be read. Reason: " + e.getMessage());
 		}
 
 		return lines;
@@ -165,8 +163,7 @@ public class MazeParser {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	private BufferedReader _prepareFileRead(File f)
-			throws FileNotFoundException {
+	private BufferedReader _prepareFileRead(File f) throws FileNotFoundException {
 
 		// Load reader
 		return new BufferedReader(new FileReader(f));
@@ -182,9 +179,73 @@ public class MazeParser {
 		try {
 			r.close();
 		} catch (IOException e) {
-			System.out.println("BufferedReader could not be closed. Reason: "
-					+ e.getMessage());
+			System.out.println("BufferedReader could not be closed. Reason: " + e.getMessage());
 		}
 	}
 
+	private void _linkNodes(Grid g) {
+
+		// Verify grid exists
+		if (g == null) {
+			System.out.println("[Node linking] Grid does not exist.");
+			return;
+		}
+
+		// Verify grid contain anything
+		if (g.getWidth() <= 0 && g.getHeight() <= 0) {
+			System.out.println("[Node linking] Grid does not contain anything.");
+			return;
+		}
+
+		// Loop grid
+		int[] loc = { 0, 0 };
+		Node current;
+		for (int y = 0; y < g.getHeight(); y++) {
+			loc[1] = y;
+			for (int x = 0; x < g.getWidth(); x++) {
+				loc[0] = x;
+
+				// Get node
+				current = g.getNode(loc);
+
+				// Skip if no node at location
+				if (current == null)
+					continue;
+
+				// Set NORTH
+				try {
+					Node north = g.getNode(new int[] { x, y - 1 });
+					current.setNorth(north);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					current.setNorth(null);
+				}
+
+				// Set EAST
+				try {
+					Node east = g.getNode(new int[] { x + 1, y });
+					current.setEast(east);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					current.setEast(null);
+				}
+
+				// Set SOUTH
+				try {
+					Node south = g.getNode(new int[] { x, y + 1 });
+					current.setSouth(south);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					current.setSouth(null);
+				}
+
+				// Set WEST
+				try {
+					Node west = g.getNode(new int[] { x - 1, y });
+					current.setWest(west);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					current.setWest(null);
+				}
+
+			}
+		}
+
+	}
 }
