@@ -1,5 +1,7 @@
 package node;
 
+import java.util.ArrayList;
+
 public class AccessibleNode extends Node {
 
 	public AccessibleNode(int[] loc) {
@@ -16,4 +18,9 @@ public class AccessibleNode extends Node {
 		return "  ";
 	}
 
+	public void askAccess(ArrayList<Node> list){
+		list.add(this);
+	}
+
+	
 }

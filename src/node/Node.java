@@ -1,5 +1,7 @@
 package node;
 
+import java.util.ArrayList;
+
 public abstract class Node {
 
 	private Node north, east, south, west;
@@ -109,5 +111,11 @@ public abstract class Node {
 	}
 
 	public abstract boolean isAccessible();
+	
+	/**
+	 * Will answer the question of access by adding itself to the given list.
+	 * @param list
+	 */
+	public abstract void askAccess(ArrayList<Node> list);
 
 }

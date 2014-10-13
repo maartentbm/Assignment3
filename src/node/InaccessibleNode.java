@@ -1,5 +1,7 @@
 package node;
 
+import java.util.ArrayList;
+
 public class InaccessibleNode extends Node {
 
 	public InaccessibleNode(int[] loc) {
@@ -15,5 +17,8 @@ public class InaccessibleNode extends Node {
 	public String toString() {
 		return "[]";
 	}
+	
+	public void askAccess(ArrayList<Node> list){}
 
+	
 }
