@@ -77,7 +77,7 @@ public abstract class Node {
 	 * @param dir
 	 * @param p
 	 */
-	public void updatePheromoneLevel(int dir, double p) {
+	public synchronized void updatePheromoneLevel(int dir, double p) {
 		
 		// Set pheromone level
 		this.pheromoneLevel[dir] += p;
