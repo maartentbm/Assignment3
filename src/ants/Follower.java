@@ -10,8 +10,14 @@ public class Follower implements Brain {
 	/**
 	 * This decides on which node to to go
 	 * The Follower Brain takes the path with the most pheromone
+	 * @throws Exception 
 	 */
-	public Node decide(ArrayList<Node> list) {
+	public Node decide(ArrayList<Node> list) throws Exception {
+		
+		if(list.size() == 0) {
+			throw new Exception("Nodelist is empty.");
+		}
+		
 		Random random = new Random();
 		
 		double sum = 0;
