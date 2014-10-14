@@ -4,22 +4,23 @@ import maze.Maze;
 import node.Node;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Ant {
-	public Maze maze;
 	
+	public int maxAge;
 	public int[] location = new int[2];
+	
+	public Brain brain;
 	public ArrayList<Node> path;
-	
-	public brain Brain();
-	
-	public Ant(Brain newBrain){
-		Brain = newBrain
+
+	public Ant(){
+		brain = new Explorer();
+		
 	}
 	
-	public void place(Maze newMaze){
-		maze = newMaze;
+	public Ant(Brain newBrain, int newMaxAge){
+		brain = newBrain;
+		maxAge = newMaxAge;
 	}
 	
 	public int[] getLocation(){
@@ -34,11 +35,6 @@ public class Ant {
 		location = newNode.getLocation();
 	}
 	
-	public void moveTo(int moveDirection){
-		// Ducasse would be proud of us.
-		location = maze.getNode(location).getNeighbours().get(moveDirection).getLocation();
-	}
-	
 	/**
 	 * The running tactics of the Ant.
 	 * @param maze
@@ -46,22 +42,25 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze,int[] startLocation,int[] goalLocation){
-		location = startLocation;
-		Random random = new Random();
+		setLocation(startLocation);
 		ArrayList<Node> ToGo = new ArrayList<Node>();
 		
 		// The first time is always special
 		path.add(maze.getNode(location));
 		ToGo = maze.getNode(location).getNeighbours();
-		location = brain(ToGo);
-				
-				
+		location = brain.decide(ToGo).getLocation();
+
 		for(int i = 0;i<maxAge||location!=goalLocation; i++){				
+			path.add(maze.getNode(location));
+			ToGo.clear();
+			
+			// We get all surrounding cells
 			ToGo = maze.getNode(location).getNeighbours();
-			ToGo.remove(path.get(i+1));
-							
+			// We remove the cell we came from last step
+			ToGo.remove(path.get(i));
+			
+			setLocation(brain.decide(ToGo).getLocation());
 			path.add(maze.getNode(location));
 		}
 	}
 }
-
