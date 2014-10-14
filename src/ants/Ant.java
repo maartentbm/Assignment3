@@ -13,9 +13,9 @@ public class Ant {
 	public Brain brain;
 	public ArrayList<Node> path;
 
-	public Ant(){
+	public Ant(int newMaxAge){
 		brain = new Explorer();
-		
+		maxAge = newMaxAge;
 	}
 	
 	public Ant(Brain newBrain, int newMaxAge){
@@ -23,14 +23,25 @@ public class Ant {
 		maxAge = newMaxAge;
 	}
 	
+	/**
+	 * A getter for location
+	 */
 	public int[] getLocation(){
 		return location;
 	}
 	
+	/**
+	 * A setter for location
+	 * @param newLocation
+	 */
 	public void setLocation(int[] newLocation){
 		location = newLocation;
 	}
 	
+	/**
+	 * A setter based on a node as argument
+	 * @param newNode
+	 */
 	public void moveTo(Node newNode){
 		location = newNode.getLocation();
 	}
@@ -45,11 +56,12 @@ public class Ant {
 		setLocation(startLocation);
 		ArrayList<Node> ToGo = new ArrayList<Node>();
 		
-		// The first time is always special
+		// Take the first step without previous location
 		path.add(maze.getNode(location));
 		ToGo = maze.getNode(location).getNeighbours();
 		location = brain.decide(ToGo).getLocation();
 
+		//When we reach the goal, or when we reach maxAge
 		for(int i = 0;i<maxAge||location!=goalLocation; i++){				
 			path.add(maze.getNode(location));
 			ToGo.clear();
@@ -59,8 +71,23 @@ public class Ant {
 			// We remove the cell we came from last step
 			ToGo.remove(path.get(i));
 			
-			setLocation(brain.decide(ToGo).getLocation());
+			boolean deadEnd = true;
+			for(int j = 0; j<ToGo.size() || deadEnd == false ; j++){
+				deadEnd = !ToGo.get(j).isAccessible();
+			}
+			
+			if(deadEnd){
+				abandon();
+			}else{
+				// Brain decides from ToGo were to go
+				location = brain.decide(ToGo).getLocation();
+			}
 			path.add(maze.getNode(location));
 		}
+	}
+	
+	public void abandon(){
+		// TODO Move back until we can go somewhere else.
+		// TODO Pheromone to represent abandoned paths.
 	}
 }
