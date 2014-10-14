@@ -2,18 +2,24 @@ package ants;
 
 import maze.Maze;
 import node.Node;
-import java.util.ArrayList;
 
-public abstract class Ant {
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Ant {
 	public Maze maze;
 	
 	public int[] location = new int[2];
-	public int alignment;
 	public ArrayList<Node> path;
 	
-	public Ant(Maze newMaze){
+	public brain Brain();
+	
+	public Ant(Brain newBrain){
+		Brain = newBrain
+	}
+	
+	public void place(Maze newMaze){
 		maze = newMaze;
-		alignment = 0;
 	}
 	
 	public int[] getLocation(){
@@ -23,12 +29,6 @@ public abstract class Ant {
 	public void setLocation(int[] newLocation){
 		location = newLocation;
 	}
-	public int getAlignment(){
-		return alignment;
-	}
-	public void setAlignment(int newDirection){
-		alignment = newDirection;
-	}
 	
 	public void moveTo(Node newNode){
 		location = newNode.getLocation();
@@ -36,61 +36,7 @@ public abstract class Ant {
 	
 	public void moveTo(int moveDirection){
 		// Ducasse would be proud of us.
-		location = maze.getNode(location).getNeighbours()[moveDirection].getLocation();
-	}
-	
-	public void look(ArrayList<Node> list ,int direction){
-		// This, not so much.
-		switch(direction){
-		case 0: lookEast(list);
-		break;
-		case 1: lookNorth(list);
-		break;
-		case 2: lookWest(list);
-		break;
-		case 3: lookSouth(list);
-		break;
-		}
-	}
-	
-	public void lookEast(ArrayList<Node> list){
-		// Check North, East, South in that order
-		int[] checkLocation = location;
-		for(int i = -1; i < 2; i++){ 
-			checkLocation[0] = location[0] - i^2 + 1;
-			checkLocation[1] = location[1] + i;
-			maze.getNode(checkLocation).askAccess(list);
-		}
-	}
-
-	public void lookNorth(ArrayList<Node> list){
-		// Checks West, North, East in that order
-		int[] checkLocation = location;
-		for(int i = -1; i < 2; i++){ 
-			checkLocation[0] = location[0] + i;
-			checkLocation[1] = location[1] - i^2 + 1;
-			maze.getNode(checkLocation).askAccess(list);
-		}
-	}
-
-	public void lookWest(ArrayList<Node> list){
-		// Checks South, West, North in that order
-		int[] checkLocation = location;
-		for(int i = -1; i < 2; i++){ 
-			checkLocation[0] = location[0] + i^2 - 1;
-			checkLocation[1] = location[1] + i;
-			maze.getNode(checkLocation).askAccess(list);
-		}
-	}
-	
-	public void lookSouth(ArrayList<Node> list){
-		// Checks West, South, East in that order
-		int[] checkLocation = location;
-		for(int i = -1; i < 2; i++){ 
-			checkLocation[0] = location[0] + i;
-			checkLocation[1] = location[1] + i^2 - 1;
-			maze.getNode(checkLocation).askAccess(list);
-		}
+		location = maze.getNode(location).getNeighbours().get(moveDirection).getLocation();
 	}
 	
 	/**
@@ -99,7 +45,23 @@ public abstract class Ant {
 	 * @param startLocation
 	 * @param goalLocation
 	 */
-	abstract public void run(Maze maze,int[] startLocation,int[] goalLocation);
-
+	public void run(Maze maze,int[] startLocation,int[] goalLocation){
+		location = startLocation;
+		Random random = new Random();
+		ArrayList<Node> ToGo = new ArrayList<Node>();
+		
+		// The first time is always special
+		path.add(maze.getNode(location));
+		ToGo = maze.getNode(location).getNeighbours();
+		location = brain(ToGo);
+				
+				
+		for(int i = 0;i<maxAge||location!=goalLocation; i++){				
+			ToGo = maze.getNode(location).getNeighbours();
+			ToGo.remove(path.get(i+1));
+							
+			path.add(maze.getNode(location));
+		}
+	}
 }
 

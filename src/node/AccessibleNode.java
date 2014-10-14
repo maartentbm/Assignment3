@@ -17,10 +17,5 @@ public class AccessibleNode extends Node {
 	public String toString() {
 		return "  ";
 	}
-
-	public void askAccess(ArrayList<Node> list){
-		list.add(this);
-	}
-
 	
 }

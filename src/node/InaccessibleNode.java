@@ -18,7 +18,4 @@ public class InaccessibleNode extends Node {
 		return "[]";
 	}
 	
-	public void askAccess(ArrayList<Node> list){}
-
-	
 }

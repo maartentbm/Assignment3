@@ -106,16 +106,16 @@ public abstract class Node {
 	 * Return array of Node neighbours.
 	 * @return
 	 */
-	public Node[] getNeighbours() {
-		return new Node[] { getEast(), getNorth(), getWest(), getSouth() };
+	public ArrayList<Node> getNeighbours() {
+		ArrayList<Node> list = new ArrayList<Node>();
+		list.add(getNorth());
+		list.add(getEast());
+		list.add(getSouth());
+		list.add(getWest());
+		
+		return list;
 	}
 
 	public abstract boolean isAccessible();
-	
-	/**
-	 * Will answer the question of access by adding itself to the given list.
-	 * @param list
-	 */
-	public abstract void askAccess(ArrayList<Node> list);
 
 }
