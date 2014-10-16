@@ -14,13 +14,13 @@ public abstract class Node {
 	 * 2 -> WEST
 	 * 3 -> SOUTH
 	 */
-	private double[] pheromoneLevel;
+	private double pheromoneLevel;
 
 	public Node(int[] loc) {
 		this.location = loc;
 
 		// Initial pheromone level = 0
-		this.pheromoneLevel = new double[] { 0, 0, 0, 0 };
+		this.pheromoneLevel = 0;
 	}
 
 	public Node getNorth() {
@@ -68,38 +68,26 @@ public abstract class Node {
 	 * @param dir
 	 * @return
 	 */
-	public double getPheromoneLevel(int dir) {
-		return pheromoneLevel[dir];
+	public double getPheromoneLevel() {
+		return pheromoneLevel;
 	}
 
+	/**
+	 * Sets pheromone level one way
+	 * @param dir
+	 * @param p
+	 */
+	public synchronized void setPheromoneLevel(double p){
+		this.pheromoneLevel = p; 
+	}
+	
 	/**
 	 * Increase the pheromone level of a given direction by any real value.
 	 * @param dir
 	 * @param p
 	 */
-	public synchronized void updatePheromoneLevel(int dir, double p) {
-		
-		// Set pheromone level
-		this.pheromoneLevel[dir] += p;
-		
-		// Get 'flipped' direction
-		int flipped = dir + 2 % 4;
-		
-		// Update pheromone level on neighbour
-		switch(flipped) {
-		case 0:
-			getEast().updatePheromoneLevel(flipped, p);
-			break;
-		case 1:
-			getNorth().updatePheromoneLevel(flipped, p);
-			break;
-		case 2:
-			getWest().updatePheromoneLevel(flipped, p);
-			break;
-		case 3:
-			getSouth().updatePheromoneLevel(flipped, p);
-			break;
-		}
+	public synchronized void updatePheromoneLevel(double p) {
+		this.pheromoneLevel += p;
 	}
 
 	/**

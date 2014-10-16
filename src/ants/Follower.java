@@ -25,8 +25,7 @@ public class Follower implements Brain {
 		// Check for every neighbouring cell
 		for(int i = 0;i<list.size();i++){
 			iFlipped = (i+2)%4;
-			// The explorer only looks at accessibility.
-			sum = sum + list.get(i).getPheromoneLevel(iFlipped);
+			sum = sum + list.get(i).getPheromoneLevel();
 		}
 
 		// We want 0 exclusive and 1 inclusive
@@ -38,7 +37,7 @@ public class Follower implements Brain {
 		
 		for(node = 0; current < chosen; node++){
 			iFlipped = (node+2)%4;
-			current = list.get(node).getPheromoneLevel(iFlipped);
+			current = list.get(node).getPheromoneLevel();
 			chosen -= current;
 		}
 		return list.get(node);
