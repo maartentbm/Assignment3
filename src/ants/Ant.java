@@ -1,6 +1,7 @@
 package ants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import maze.Maze;
 import node.Node;
@@ -63,7 +64,8 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
-
+		System.out.println("This Ant: "+this+"\n|Start: "+ startLocation[0]+" "+startLocation[1]+"\n|End:   "+goalLocation[0]+" "+goalLocation[1]);
+		
 		// Set current location to start position
 		setLocation(startLocation);
 
@@ -73,24 +75,30 @@ public class Ant {
 		// Take the first step without a previous location
 		path.add(maze.getNode(location));
 		toGo = maze.getNode(location).getNeighbours();
-
+		try {
+			// Brain decides from ToGo were to go
+			location = brain.decide(toGo).getLocation();
+		} catch (Exception e) {
+			System.out.println("Error: Brain got an empty Node list.");
+			e.printStackTrace();
+			return;
+		}
 		// When we reach the goal, or when we reach maxAge
 		for (int i = 0; i < maxAge; i++) {
 			path.add(maze.getNode(location));
 			toGo.clear();
-
+			
+			if(accessibleNeighbours(maze.getNode(location).getNeighbours()) == 1){
+				System.out.println("Dead End.");
+				backOff();
+			}
+			
 			// We get all surrounding cells
 			toGo = maze.getNode(location).getNeighbours();
-
+			
 			// We remove the cell we came from last step
 			toGo.remove(path.get(i));
-
-			boolean deadEnd = checkDeadEnd(toGo);
-
-			if (deadEnd) {
-				abandon();
-			} else {
-
+			
 				try {
 					// Brain decides from ToGo were to go
 					location = brain.decide(toGo).getLocation();
@@ -99,15 +107,14 @@ public class Ant {
 					e.printStackTrace();
 					return;
 				}
-			}
-			
-			if(location == goalLocation){
+				
+			if(Arrays.equals(location,goalLocation)){
 				spreadPheromone();
-				break;
-			}
+				return;
+			}		
+				
 		}
-		System.out.println("Done!");
-
+		System.out.println("This Ant died of old age.");
 	}		
 	
 	public void spreadPheromone(){
@@ -116,20 +123,28 @@ public class Ant {
 			path.get(i).updatePheromoneLevel(newPheromones);
 		}
 		System.out.println("Reached the end in "+path.size()+" steps.");
+		System.out.println("Releasing "+newPheromones+" onto the path.");
 	}
 	
-	public void abandon(){
-	// TODO Return untill last decision
-	// TODO Pheromone to represent abandoned paths.
+	// If we find a dead end. 
+	public void backOff(){
+		System.out.println("Stuck on "+path.get(path.size()-1).getLocation()[0] + " " + path.get(path.size()-1).getLocation()[1]);
+		for(int i = path.size(); i > 0 || (accessibleNeighbours(path.get(i).getNeighbours()) < 3) ; --i){
+			path.remove(path.get(i));
+		}
+		System.out.println("Dead end. Stepped back.");
 	}
 
-	private boolean checkDeadEnd(ArrayList<Node> toGo){
-		boolean deadEnd = true;
-		for (int j = 0; j < toGo.size() && !deadEnd == false; j++) {
-			if (toGo.get(j) != null) {
-				deadEnd = !toGo.get(j).isAccessible();
-			}
+	private int accessibleNeighbours(ArrayList<Node> neighbours){
+		int count = 0;
+		for(int i = 0; i < neighbours.size(); i++){
+			count += neighbours.get(i).isAccessible()?1:0;
 		}
-		return deadEnd;
+		System.out.println("accessible Neighbours: "+count);
+		return count;
+	}
+	
+	private boolean checkDeadEnd(ArrayList<Node> list){
+		return (accessibleNeighbours(list)==1);
 	}
 }

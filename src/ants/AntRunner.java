@@ -44,8 +44,8 @@ public class AntRunner extends Thread {
 	private void _setDefaults() {
 
 		// Set default parameters
-		setMaxIterations(625);
-		setAntsPatrolling(100);
+		setMaxIterations(1000000);
+		setAntsPatrolling(1);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
 
@@ -81,7 +81,7 @@ public class AntRunner extends Thread {
 		List<Callable<Void>> tasks = new ArrayList<Callable<Void>>(getAntsPatrolling());
 		
 		// Add ants to task list
-		for (Ant a : getAnts()) {
+		for (final Ant a : getAnts()) {
 			tasks.add(new Callable<Void>() {
 				public Void call() {
 					System.out.println("Asynchronous task");

@@ -20,7 +20,7 @@ public class Explorer implements Brain {
 
 		Random random = new Random();
 
-		ArrayList<Integer> accessible = new ArrayList<Integer>();
+		ArrayList<Node> accessible = new ArrayList<Node>();
 
 		// Check for every neighboring cell
 		for (int i = 0; i < list.size(); i++) {
@@ -30,17 +30,16 @@ public class Explorer implements Brain {
 
 				// The explorer only looks at accessibility.
 				if (list.get(i).isAccessible()) {
-					accessible.add(new Integer(i));
+					accessible.add(list.get(i));
 				}
-
 			}
 		}
 
 		if (accessible.size() > 0) {
 			// Pick a random from the accessible nodes.
 			// These are integers!
-			int listIndex = accessible.get(random.nextInt(accessible.size()));
-			return list.get(listIndex);
+			return accessible.get(random.nextInt(accessible.size()));
+			
 		} else {
 			return null;
 		}
