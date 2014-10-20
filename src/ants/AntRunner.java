@@ -44,7 +44,7 @@ public class AntRunner extends Thread {
 	private void _setDefaults() {
 
 		// Set default parameters
-		setMaxIterations(1000000);
+		setMaxIterations(100);
 		setAntsPatrolling(1);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
@@ -60,13 +60,9 @@ public class AntRunner extends Thread {
 	private void _createAnts() {
 
 		this.ants = new ArrayList<Ant>(getAntsPatrolling());
-
 		for (int i = 0; i < getAntsPatrolling(); i++) {
-
 			ants.add(new Ant(ExplorerBrain, getMaxIterations(), getPheromoneAmount()));
-
 		}
-
 	}
 
 	/**

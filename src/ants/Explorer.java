@@ -24,10 +24,8 @@ public class Explorer implements Brain {
 
 		// Check for every neighboring cell
 		for (int i = 0; i < list.size(); i++) {
-
 			// Check for borders etc.
 			if (list.get(i) != null) {
-
 				// The explorer only looks at accessibility.
 				if (list.get(i).isAccessible()) {
 					accessible.add(list.get(i));
@@ -39,7 +37,6 @@ public class Explorer implements Brain {
 			// Pick a random from the accessible nodes.
 			// These are integers!
 			return accessible.get(random.nextInt(accessible.size()));
-			
 		} else {
 			return null;
 		}
