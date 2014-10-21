@@ -40,7 +40,6 @@ public class Ant {
 
 	/**
 	 * A setter for location
-	 * 
 	 * @param newLocation
 	 */
 	public void setLocation(int[] newLocation) {
@@ -49,7 +48,6 @@ public class Ant {
 
 	/**
 	 * A setter based on a node as argument
-	 * 
 	 * @param newNode
 	 */
 	public void moveTo(Node newNode) {
@@ -58,73 +56,35 @@ public class Ant {
 
 	/**
 	 * The running tactics of the Ant.
-	 * 
 	 * @param maze
 	 * @param startLocation
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
-		if(checkMaze(maze, startLocation, goalLocation)==false){
-			System.out.println("Start or goal location invalid!");
-			return;
-		}
-		
-		System.out.println("This Ant: "+this+"\n|Start: "+ startLocation[0]+" "+startLocation[1]+"\n|End:   "+goalLocation[0]+" "+goalLocation[1]);
-		
-		// Set current location to start position
-		setLocation(startLocation);
-		// Initialize toGo list
-		ArrayList<Node> toGo = new ArrayList<Node>();
-
-		// Take the first step without a previous location
+		location = startLocation;
 		path.add(maze.getNode(location));
-		toGo = maze.getNode(location).getNeighbours();
-		try {
-			// Brain decides from ToGo were to go
-			location = brain.decide(toGo).getLocation();
-		} catch (Exception e) {
-			System.out.println("Error: Brain got an empty Node list.");
-			e.printStackTrace();
-			return;
-		}
+		ArrayList<Node> toGo = new ArrayList<Node>();
 		
-		// When we reach the goal, or when we reach maxAge
-		for (int i = 0; i < maxAge; i++) {
-			System.out.println("Location " + location[0] + " " + location[1]);
-			path.add(maze.getNode(location));
-			toGo.clear();
-
-			// We get all surrounding cells
-			// We remove the cell we came from last step
-			toGo = maze.getNode(location).getNeighbours();
-			toGo.remove(path.get(i));
-			
-			// Check if we are on a dead end. If so, back off to were we last decided.
-			System.out.println(accessibleNeighbours(toGo));
-			if(accessibleNeighbours(toGo)==0){
-				System.out.println("We have hit a dead end on "+location[0]+"x"+location[1]);
-				backOff();
-			}
-			//
-				try {
-					// Brain decides from ToGo were to go
-					location = brain.decide(toGo).getLocation();
-				} catch (Exception e) {
-					System.out.println("Error: Brain got an empty Node list.");
-					e.printStackTrace();
-					return;
-				}
-				
+		//First step - without predecession
+		toGo = maze.getNode(location).getNeighbours();
+		path.add(brain.decide(toGo));
+		
+		for(int i = 0; i < maxAge; i++){
+			// Goal reached?
 			if(Arrays.equals(location,goalLocation)){
-				spreadPheromone();
-				return;
-			}		
-				
+				System.out.println("[Ant|run] Reached goal");
+			}
+			
+			// Check neighbours, where can I go.
+			
+			//
+			location = brain.decide(toGo).getLocation();
+			
 		}
-		System.out.println("This Ant died of old age.");
 	}		
 	
 	public void spreadPheromone(){
+		// linear dependent
 		float newPheromones = pheromoneAmount/path.size();
 		for(int i = 0; i < path.size(); i ++){
 			path.get(i).updatePheromoneLevel(newPheromones);
@@ -135,23 +95,18 @@ public class Ant {
 	
 	// If we find a dead end. 
 	public void backOff(){
-		for(int i = path.size(); i > 0 || (accessibleNeighbours(path.get(i).getNeighbours()) < 3) ; --i){
-			path.remove(path.get(i));
+		int size = path.size();
+		for(int i = size-1;(i >= 0)&&(accessibleNeighbours( path.get(i).getNeighbours() ) < 3) ; i--){
+			// Step back is there are less then three accesible neighbours.
+			int [] loc = path.get(i).getLocation();
+			System.out.println("Removing: "+loc[0]+"x" + loc[1]); 
+			path.remove(i);
 		}
+		// you are now on the old crossroad.
 	}
 
-	/**
-	 * Returns true if both start and goal locations are valid.
-	 * @param maze
-	 * @param startLocation
-	 * @param goalLocation
-	 * @return
-	 */
-	private boolean checkMaze(Maze maze, int[] startLocation, int[] goalLocation){
-		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());		
-	}
-	
 	private int accessibleNeighbours(ArrayList<Node> neighbours){
+		// How many of the given nodes are accessible
 		int count = 0;
 		for(int i = 0; i < neighbours.size(); i++){
 			count += neighbours.get(i).isAccessible()?1:0;

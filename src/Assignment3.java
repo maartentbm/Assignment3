@@ -30,10 +30,10 @@ public class Assignment3 {
 		 * Test2
 		 * Test3 S: 0,2 G: 7,2
 		 */
-		Maze Test3 = mp.createMaze(new File("res/Test3.txt"));
+		Maze Test3 = mp.createMaze(new File("res/Test3-e.txt"));
 		System.out.println(Test3);
 		System.out.println("\n");
-		AntRunner runnerTest1 = new AntRunner(Test3, new int[]{0,2}, new int[]{7,2});
+		AntRunner runnerTest1 = new AntRunner(Test3, new int[]{1,3}, new int[]{8,3});
 		runnerTest1.start();
 		
 		// Medium maze

@@ -21,10 +21,8 @@ public class Follower implements Brain {
 		Random random = new Random();
 		
 		double sum = 0;
-		int iFlipped = 0;
 		// Check for every neighbouring cell
 		for(int i = 0;i<list.size();i++){
-			iFlipped = (i+2)%4;
 			sum = sum + list.get(i).getPheromoneLevel();
 		}
 
@@ -36,7 +34,6 @@ public class Follower implements Brain {
 		int node = 0;
 		
 		for(node = 0; current < chosen; node++){
-			iFlipped = (node+2)%4;
 			current = list.get(node).getPheromoneLevel();
 			chosen -= current;
 		}

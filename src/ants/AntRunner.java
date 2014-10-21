@@ -69,7 +69,11 @@ public class AntRunner extends Thread {
 	 * Run ants!
 	 */
 	public void run() {
-
+		if(checkMaze(maze, startLocation, goalLocation)==false){
+			System.out.println("Start or goal location invalid!");
+			return;
+		}
+		
 		// Create new thread pool
 		ExecutorService executorService = Executors.newFixedThreadPool(10);
 		
@@ -99,7 +103,6 @@ public class AntRunner extends Thread {
 			e.printStackTrace();
 			executorService.shutdown();
 		}
-		
 	}
 
 	/**
@@ -178,6 +181,17 @@ public class AntRunner extends Thread {
 	}
 
 	/**
+	 * Returns true if both start and goal locations are valid.
+	 * @param maze
+	 * @param startLocation
+	 * @param goalLocation
+	 * @return
+	 */
+	private boolean checkMaze(Maze maze, int[] startLocation, int[] goalLocation){
+		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());		
+	}
+	
+	/**
 	 * @return the ants
 	 */
 	public ArrayList<Ant> getAnts() {
@@ -213,5 +227,4 @@ public class AntRunner extends Thread {
 	public void setGoalLocation(int[] goalLocation) {
 		this.goalLocation = goalLocation;
 	}
-
 }
