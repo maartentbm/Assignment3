@@ -1,7 +1,6 @@
 package ants;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -10,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import maze.Maze;
+import node.Node;
 
 public class AntRunner extends Thread {
 
@@ -17,7 +17,7 @@ public class AntRunner extends Thread {
 
 	private Maze maze;
 	private int maxIterations;
-	private ConcurrentHashMap<Integer, Brain> antsPatrolling;
+	private ConcurrentHashMap<Integer, Brain> antSetup;
 	private float pheromoneAmount;
 	private float pheromoneEvaporation;
 	private ArrayList<Ant> ants;
@@ -36,7 +36,7 @@ public class AntRunner extends Thread {
 		this.goalLocation = goalLocation;
 
 		// Create ants
-		this._createAnts(getAntsPatrolling());
+		this._createAnts(getantSetup());
 
 	}
 
@@ -53,7 +53,7 @@ public class AntRunner extends Thread {
 		
 		// Set default parameters
 		setMaxIterations(100);
-		setAntsPatrolling(defaultAntSetup);
+		setantSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
 
@@ -134,10 +134,32 @@ public class AntRunner extends Thread {
 			executorService.shutdown();
 		}
 		
-		Ant remcoDeMier = new Ant(new Follower(), getMaxIterations(), getPheromoneAmount() );
-		remcoDeMier.run(getMaze(), getStartLocation(), getGoalLocation());
 	}
 
+	/**
+	 * Retrieves result of all ants after Ant run.
+	 * @return ArrayList of paths (path in Node[] form)
+	 */
+	public ArrayList<Node[]> getResults() {
+		
+		// Prepare return array
+		ArrayList<Node[]> result = new ArrayList<Node[]>();
+		
+		// Loop ants
+		for(Ant a : this.getAnts()) {
+			
+			// Get path
+			if(a.path != null) {
+				Node[] path = (Node[]) a.path.toArray();
+				result.add(path);
+			}
+			
+		}
+		
+		return result;
+		
+	}
+	
 	/**
 	 * @return the maxIterations
 	 */
@@ -154,18 +176,18 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @return the antsPatrolling
+	 * @return the antSetup
 	 */
-	public ConcurrentHashMap<Integer, Brain> getAntsPatrolling() {
-		return antsPatrolling;
+	public ConcurrentHashMap<Integer, Brain> getantSetup() {
+		return antSetup;
 	}
 
 	/**
-	 * @param antsPatrolling
-	 *            the antsPatrolling to set
+	 * @param antSetup
+	 *            the antSetup to set
 	 */
-	public void setAntsPatrolling(ConcurrentHashMap<Integer, Brain> antsPatrolling) {
-		this.antsPatrolling = antsPatrolling;
+	public void setantSetup(ConcurrentHashMap<Integer, Brain> antSetup) {
+		this.antSetup = antSetup;
 	}
 
 	/**
