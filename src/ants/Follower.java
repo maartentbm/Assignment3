@@ -21,18 +21,26 @@ public class Follower implements Brain {
 		for(int i = 0;i<list.size();i++){
 			sum = sum + list.get(i).getPheromoneLevel();
 		}
-
+		System.out.println("Out of "+sum);
 		// We want 0 exclusive and 1 inclusive
 		// Thats why we do 1-random. It doesn't allow zero.
 		double chosen = (1-random.nextDouble())*sum;
+		System.out.println("Look for "+chosen+"\n");
+		
 		
 		double current = 0;
 		int node = 0;
-		
-		for(node = 0; current < chosen; node++){
-			current = list.get(node).getPheromoneLevel();
-			chosen -= current;
+		for(int i = 0;i < list.size(); i++){
+			if(chosen > current){
+				System.out.println("Between 0 and "+current);
+				current = list.get(i).getPheromoneLevel();
+				chosen = chosen - current;
+			} else {
+				node = i;
+				break;
+			}
 		}
+		//System.out.println("Chosen the "+node);
 		return list.get(node);
 	}
 }

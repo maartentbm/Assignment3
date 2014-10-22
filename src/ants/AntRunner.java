@@ -34,7 +34,7 @@ public class AntRunner extends Thread {
 		this.goalLocation = goalLocation;
 
 		// Create ants
-		this._createAnts();
+		this._createAnts(ExplorerBrain);
 
 	}
 
@@ -57,19 +57,30 @@ public class AntRunner extends Thread {
 	/**
 	 * Setup antRunner by creating ants.
 	 */
-	private void _createAnts() {
+	private void _createAnts(Brain brain) {
 
 		this.ants = new ArrayList<Ant>(getAntsPatrolling());
 		for (int i = 0; i < getAntsPatrolling(); i++) {
-			ants.add(new Ant(ExplorerBrain, getMaxIterations(), getPheromoneAmount()));
+			ants.add(new Ant(brain, getMaxIterations(), getPheromoneAmount()));
 		}
 	}
 
 	/**
+	 * Returns true if both start and goal locations are valid.
+	 * @param maze
+	 * @param startLocation
+	 * @param goalLocation
+	 * @return
+	 */
+	private boolean _checkMaze(Maze maze, int[] startLocation, int[] goalLocation){
+		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());		
+	}
+	
+	/**
 	 * Run ants!
 	 */
 	public void run() {
-		if(checkMaze(maze, startLocation, goalLocation)==false){
+		if(_checkMaze(maze, startLocation, goalLocation)==false){
 			System.out.println("Start or goal location invalid!");
 			return;
 		}
@@ -103,6 +114,9 @@ public class AntRunner extends Thread {
 			e.printStackTrace();
 			executorService.shutdown();
 		}
+		
+		Ant remcoDeMier = new Ant(new Follower(), getMaxIterations(), getPheromoneAmount() );
+		remcoDeMier.run(getMaze(), getStartLocation(), getGoalLocation());
 	}
 
 	/**
@@ -178,17 +192,6 @@ public class AntRunner extends Thread {
 	 */
 	public void setMaze(Maze maze) {
 		this.maze = maze;
-	}
-
-	/**
-	 * Returns true if both start and goal locations are valid.
-	 * @param maze
-	 * @param startLocation
-	 * @param goalLocation
-	 * @return
-	 */
-	private boolean checkMaze(Maze maze, int[] startLocation, int[] goalLocation){
-		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());		
 	}
 	
 	/**

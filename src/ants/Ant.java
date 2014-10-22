@@ -67,13 +67,14 @@ public class Ant {
 		path.add(maze.getNode(location));
 		ArrayList<Node> toGo = new ArrayList<Node>();
 		
+		
 		//First step - without predecessor
 		toGo = maze.getNode(location).getNeighbours();
 		path.add(brain.decide(toGo));
 		
 		for(int i = 0; i < maxAge; i++){
 			// CONS
-			System.out.println("Location: " + location[0] + " " + location[1]);			
+			System.out.println("[Ant|run] Location: " + location[0] + " " + location[1]);			
 			
 			// Goal reached?
 			if(Arrays.equals(location,goalLocation)){
@@ -136,7 +137,7 @@ public class Ant {
 		for(int i = size-1;(i >= 0)&&(accessibleNeighbours( path.get(i).getNeighbours() ) < 3) ; i--){
 			// Step back is there are less then three accesible neighbours.
 			int [] loc = path.get(i).getLocation();
-			System.out.println("Removing: "+loc[0]+"x" + loc[1]); 
+			System.out.println("[Ant|backOff] Removing: "+loc[0]+"x" + loc[1]); 
 			path.remove(i);
 		}
 		// you are now on the old crossroad.
