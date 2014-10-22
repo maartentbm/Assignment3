@@ -13,19 +13,13 @@ public class Rebel implements Brain{
 	 * @throws Exception 
 	 */
 	
-	public Node decide(ArrayList<Node> list) throws Exception {
-		
-		if(list.size() == 0) {
-			throw new Exception("Nodelist is empty.");
-		}
+	public Node decide(ArrayList<Node> list){
 		
 		Random random = new Random();
 		
 		double sum = 0;
-		int iFlipped = 0;
 		// Check for every neighbouring cell
 		for(int i = 0;i<list.size();i++){
-			iFlipped = (i+2)%4;
 			sum = sum + list.get(i).getPheromoneLevel();
 		}
 
@@ -37,12 +31,9 @@ public class Rebel implements Brain{
 		int node = 0;
 		
 		for(node = 0; current > chosen; node++){
-			iFlipped = (node+2)%4;
 			current = 1/list.get(node).getPheromoneLevel();
 			chosen -= current;
 		}
 		return list.get(node);
-
 	}
-
 }

@@ -12,12 +12,7 @@ public class Explorer implements Brain {
 	 * 
 	 * @throws Exception
 	 */
-	public Node decide(ArrayList<Node> list) throws Exception {
-
-		if (list.size() == 0) {
-			throw new Exception("Nodelist is empty.");
-		}
-
+	public Node decide(ArrayList<Node> list){
 		Random random = new Random();
 
 		ArrayList<Node> accessible = new ArrayList<Node>();

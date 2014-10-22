@@ -27,13 +27,13 @@ public class Assignment3 {
 		
 		/*	REMINDERS
 		 * Test1 S: 0,0 G: 4,0
-		 * Test2
+		 * Test2 S: 0,0 G: 0,4
 		 * Test3 S: 0,2 G: 7,2
 		 */
-		Maze Test3 = mp.createMaze(new File("res/Test3-e.txt"));
-		System.out.println(Test3);
+		Maze Test = mp.createMaze(new File("res/Test2-e.txt"));
+		System.out.println(Test);
 		System.out.println("\n");
-		AntRunner runnerTest1 = new AntRunner(Test3, new int[]{1,3}, new int[]{8,3});
+		AntRunner runnerTest1 = new AntRunner(Test, new int[]{1,1}, new int[]{1,4});
 		runnerTest1.start();
 		
 		// Medium maze
