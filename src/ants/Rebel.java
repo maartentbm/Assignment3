@@ -5,7 +5,7 @@ import java.util.Random;
 
 import node.Node;
 
-public class Rebel implements Brain{
+public class Rebel implements Brain {
 
 	/**
 	 * This decides on which node to to go
@@ -35,5 +35,11 @@ public class Rebel implements Brain{
 			chosen -= current;
 		}
 		return list.get(node);
+	}
+	
+
+	@Override
+	public String toString() {
+		return "<Brain[Rebel]>";
 	}
 }

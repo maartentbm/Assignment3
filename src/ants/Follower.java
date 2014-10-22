@@ -46,4 +46,10 @@ public class Follower implements Brain {
 		// System.out.println("Chosen the "+node);
 		return list.get(node);
 	}
+	
+
+	@Override
+	public String toString() {
+		return "<Brain[Follower]>";
+	}
 }

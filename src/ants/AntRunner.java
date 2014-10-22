@@ -1,11 +1,13 @@
 package ants;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import maze.Maze;
 
@@ -15,7 +17,7 @@ public class AntRunner extends Thread {
 
 	private Maze maze;
 	private int maxIterations;
-	private int antsPatrolling;
+	private ConcurrentHashMap<Integer, Brain> antsPatrolling;
 	private float pheromoneAmount;
 	private float pheromoneEvaporation;
 	private ArrayList<Ant> ants;
@@ -34,7 +36,7 @@ public class AntRunner extends Thread {
 		this.goalLocation = goalLocation;
 
 		// Create ants
-		this._createAnts(ExplorerBrain);
+		this._createAnts(getAntsPatrolling());
 
 	}
 
@@ -43,9 +45,15 @@ public class AntRunner extends Thread {
 	 */
 	private void _setDefaults() {
 
+		// Default ant setup
+		ConcurrentHashMap<Integer, Brain> defaultAntSetup = new ConcurrentHashMap<Integer, Brain>();
+		defaultAntSetup.put(10, new Explorer());
+		defaultAntSetup.put(10, new Follower());
+		defaultAntSetup.put(10, new Rebel());
+		
 		// Set default parameters
 		setMaxIterations(100);
-		setAntsPatrolling(1);
+		setAntsPatrolling(defaultAntSetup);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
 
@@ -56,13 +64,24 @@ public class AntRunner extends Thread {
 
 	/**
 	 * Setup antRunner by creating ants.
+	 * 
+	 * @param antMap Map containing the amount of ants which should be created with the associated brain. Example: (10 => Explorer), (25 => Follower) will create 10 explorers and 25 followers.
 	 */
-	private void _createAnts(Brain brain) {
+	private void _createAnts(ConcurrentHashMap<Integer, Brain> antMap) {
 
-		this.ants = new ArrayList<Ant>(getAntsPatrolling());
-		for (int i = 0; i < getAntsPatrolling(); i++) {
-			ants.add(new Ant(brain, getMaxIterations(), getPheromoneAmount()));
+		// Init ant ArrayList
+		this.ants = new ArrayList<Ant>();
+		
+		// Iterate over HashMap
+		for(Map.Entry<Integer, Brain> cursor : antMap.entrySet()) {
+			
+			// Create new ants
+			for (int i = 0; i < cursor.getKey(); i++) {
+				ants.add(new Ant(cursor.getValue(), getMaxIterations(), getPheromoneAmount()));
+			}
+			
 		}
+		
 	}
 
 	/**
@@ -89,7 +108,7 @@ public class AntRunner extends Thread {
 		ExecutorService executorService = Executors.newFixedThreadPool(10);
 		
 		// Create new callable tasks collection
-		List<Callable<Void>> tasks = new ArrayList<Callable<Void>>(getAntsPatrolling());
+		List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
 		
 		// Add ants to task list
 		for (final Ant a : getAnts()) {
@@ -137,7 +156,7 @@ public class AntRunner extends Thread {
 	/**
 	 * @return the antsPatrolling
 	 */
-	public int getAntsPatrolling() {
+	public ConcurrentHashMap<Integer, Brain> getAntsPatrolling() {
 		return antsPatrolling;
 	}
 
@@ -145,7 +164,7 @@ public class AntRunner extends Thread {
 	 * @param antsPatrolling
 	 *            the antsPatrolling to set
 	 */
-	public void setAntsPatrolling(int antsPatrolling) {
+	public void setAntsPatrolling(ConcurrentHashMap<Integer, Brain> antsPatrolling) {
 		this.antsPatrolling = antsPatrolling;
 	}
 

@@ -36,4 +36,9 @@ public class Explorer implements Brain {
 			return null;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "<Brain[Explorer]>";
+	}
 }

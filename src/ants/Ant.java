@@ -97,7 +97,7 @@ public class Ant {
 				path.add(maze.getNode(location));
 
 			} else {
-				System.out.println("Can't find a next node from location " + location + " (previous path: " + path + ")");
+				System.out.println("Can't find a next node from location (" + location[0] + ", " + location[0] + "). (previous path: " + path + ", current brain: " + this.brain + ")");
 			}
 		}
 		System.out.println("This ant died of old age.");
@@ -153,6 +153,11 @@ public class Ant {
 	}
 
 	private int accessibleNeighbours(ArrayList<Node> neighbours) {
+
+		if (neighbours == null) {
+			return 0;
+		}
+
 		// How many of the given nodes are accessible
 		int count = 0;
 		for (int i = 0; i < neighbours.size(); i++) {
