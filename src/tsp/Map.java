@@ -6,6 +6,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * map that contains locations and salesman
+ * @author robin
+ *
+ */
 public class Map {
 	Location mazeBegin;
 	Location mazeEnd;
@@ -37,7 +42,12 @@ public class Map {
 		
 	
 	}
-	
+	/**
+	 * Returns list of routes from location from excluding ones that go to locations contained in exclude
+	 * @param from
+	 * @param excluded
+	 * @return ArrayList<Route>
+	 */
 	public ArrayList<Route> getRoutesFrom(Location from, ArrayList<Location> excluded){
 		ArrayList<Route> ret = new ArrayList<Route>();
 		
@@ -64,6 +74,9 @@ public class Map {
 		return null;
 	}
 	
+	/**
+	 * Applys forgetting factor to all routes
+	 */
 	public void routesForget(){
 		
 		for(Route i : routes){
@@ -71,6 +84,10 @@ public class Map {
 		}
 	}
 	
+	/**
+	 * Clears previous swarm and builds new swarm of salesman
+	 * @param size
+	 */
 	public void initSwarm(int size){
 		swarm.clear();
 		
@@ -80,10 +97,20 @@ public class Map {
 		
 	}
 	
+	/**
+	 * picks random route from list
+	 * @param routes
+	 * @return Route
+	 */
 	public Route randomRoute(ArrayList<Route> routes){
 		return routes.get(RNG.nextInt(routes.size()));
 	}
 	
+	/**
+	 * pick route from list roullet style
+	 * @param routes
+	 * @return Route
+	 */
 	public Route chanceRoute(ArrayList<Route> routes){
 		
 		double[] dart = getDartList(routes);
@@ -99,6 +126,11 @@ public class Map {
 		return null;
 	}
 	
+	/**
+	 * Returns chance dependent list
+	 * @param routes
+	 * @return
+	 */
 	public double[] getDartList(ArrayList<Route> routes){
 		double[] ret = new double[routes.size()];
 		double total=0;
@@ -123,6 +155,9 @@ public class Map {
 		return ret;
 	}
 	
+	/**
+	 * Moves salesman trough routes randomly
+	 */
 	public void swarmRunRandom(){
 		//Main loop
 		for(int i=0; i<locations.size()-2; i++){
@@ -138,6 +173,9 @@ public class Map {
 		
 	}
 	
+	/**
+	 * Move salesman trough swarm roullet style
+	 */
 	public void swarmRunChance(){
 		//Main loop
 		for(int i=0; i<locations.size()-2; i++){
@@ -154,22 +192,9 @@ public class Map {
 		trackPreformance();
 	}
 	
-	public void printSwarmInfo(){
-		for(Salesman s : swarm){
-			System.out.println(s.toString());
-		}
-	}
-	
-	public void printRouteInfo(){
-		for(Location l : locations){
-			System.out.print(l.toString() +" Route pheromone scores: ");
-			for (Route r : l.getRoutes()){
-				System.out.print( "("+Math.round(r.pheromone)+") ");
-			}
-			System.out.print("\n");
-		}
-	}
-	
+	/**
+	 * Applys pheromone to routes for swarm
+	 */
 	public void applyPheromone(){
 		for(Salesman s : swarm){
 			for(Route r : s.getRoute()){
@@ -178,6 +203,10 @@ public class Map {
 		}
 	}
 	
+	/**
+	 * Applys pheromone to best route found so far
+	 * @param factor
+	 */
 	public void applyPheromoneBestRoute(double factor){
 		if (bestDistance != -1){
 			for(Route r : bestSalesman.getRoute()){
@@ -186,32 +215,9 @@ public class Map {
 		}
 	}
 	
-	public double averageDistance(){
-		double temp=0;
-		
-		for (Salesman s : swarm){
-			temp += s.distance;
-		}
-		
-		return temp/swarm.size();
-	}
-	
 	/**
-	 * Functie alleen toepasselijk bij volledige convertie
+	 * Tracks preformance of swarm
 	 */
-	public void printEndRoute(){
-		
-		System.out.println("Best route had a distance of: " +bestSalesman.distance +"\nThis route was:");
-		System.out.println("Start: " +mazeBegin.toString());
-		Location trackLoc = mazeBegin;
-		
-		for(Route r :bestSalesman.getRoute()){
-			System.out.println("From " +trackLoc.toString() +" to " +r.getOtherLocation(trackLoc).toString() +" with distance "+ r.length);
-			trackLoc = r.getOtherLocation(trackLoc);
-		}
-		System.out.println("End: " +mazeEnd.toString());
-	}
-	
 	public void trackPreformance(){
 		Salesman best = swarm.get(0);
 		for(Salesman s : swarm){
@@ -234,6 +240,54 @@ public class Map {
 		this.epochAverage.add(averageDistance());
 		this.epochBest.add(best.distance);
 	}
+	
+	public double averageDistance(){
+		double temp=0;
+		
+		for (Salesman s : swarm){
+			temp += s.distance;
+		}
+		
+		return temp/swarm.size();
+	}
+	
+	
+	public void printSwarmInfo(){
+		for(Salesman s : swarm){
+			System.out.println(s.toString());
+		}
+	}
+	
+	public void printRouteInfo(){
+		for(Location l : locations){
+			System.out.print(l.toString() +" Route pheromone scores: ");
+			for (Route r : l.getRoutes()){
+				System.out.print( "("+Math.round(r.pheromone)+") ");
+			}
+			System.out.print("\n");
+		}
+	}
+	
+
+	
+
+	
+	/**
+	 * Functie alleen toepasselijk bij volledige convertie
+	 */
+	public void printEndRoute(){
+		
+		System.out.println("Best route had a distance of: " +bestSalesman.distance +"\nThis route was:");
+		System.out.println("Start: " +mazeBegin.toString());
+		Location trackLoc = mazeBegin;
+		
+		for(Route r :bestSalesman.getRoute()){
+			System.out.println("From " +trackLoc.toString() +" to " +r.getOtherLocation(trackLoc).toString() +" with distance "+ r.length);
+			trackLoc = r.getOtherLocation(trackLoc);
+		}
+		System.out.println("End: " +mazeEnd.toString());
+	}
+
 	
 	public void writeGraph(String filename){
 		try{
