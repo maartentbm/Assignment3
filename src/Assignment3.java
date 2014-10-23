@@ -17,14 +17,12 @@ public class Assignment3 {
 		
 		MazeParser mp = new MazeParser();
 
-		/*
 		// Easy maze - which is to hard for now
 		Maze easy = mp.createMaze(new File("res/easy maze.txt"));
 		System.out.println(easy);
 		// Run ants!
 		AntRunner runner = new AntRunner(easy, new int[]{0,0}, new int[]{24,14});
 		runner.start();
-		*/
 		
 		/*	REMINDERS
 		 * Test1 S: 0,0 G: 4,0
@@ -33,11 +31,11 @@ public class Assignment3 {
 		 * 
 		 */
 		
-		Maze Test = mp.createMaze(new File("res/Test4-e.txt"));
-		System.out.println(Test);
-		System.out.println("\n");
-		AntRunner runnerTest1 = new AntRunner(Test, new int[]{8,1}, new int[]{8,7});
-		runnerTest1.start();
+//		Maze Test = mp.createMaze(new File("res/Test4-e.txt"));
+//		System.out.println(Test);
+//		System.out.println("\n");
+//		AntRunner runnerTest1 = new AntRunner(Test, new int[]{8,1}, new int[]{8,7});
+//		runnerTest1.start();
 
 		// Medium maze
 //		Maze medium = mp.createMaze(new File("res/medium maze.txt"));

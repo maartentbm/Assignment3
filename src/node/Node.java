@@ -8,11 +8,7 @@ public abstract class Node {
 	private int[] location;
 	
 	/**
-	 * Pheromone level. Array index == direction.
-	 * 0 -> EAST
-	 * 1 -> NORTH
-	 * 2 -> WEST
-	 * 3 -> SOUTH
+	 * Pheromone level.
 	 */
 	private double pheromoneLevel;
 

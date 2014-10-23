@@ -1,6 +1,8 @@
 package ants;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -17,10 +19,10 @@ public class AntRunner extends Thread {
 
 	private Maze maze;
 	private int maxIterations;
-	private ConcurrentHashMap<Integer, Brain> antSetup;
+	private AntSetup antSetup;
 	private float pheromoneAmount;
 	private float pheromoneEvaporation;
-	private ArrayList<Ant> ants;
+	private LinkedList<ArrayList<Ant>> ants;
 	private int[] startLocation, goalLocation;
 
 	public AntRunner(Maze m, int[] startLocation, int[] goalLocation) {
@@ -36,8 +38,7 @@ public class AntRunner extends Thread {
 		this.goalLocation = goalLocation;
 
 		// Create ants
-		this._createAnts(getantSetup());
-
+		this._createAnts(getAntSetup());
 	}
 
 	/**
@@ -45,121 +46,161 @@ public class AntRunner extends Thread {
 	 */
 	private void _setDefaults() {
 
-		// Default ant setup
-		ConcurrentHashMap<Integer, Brain> defaultAntSetup = new ConcurrentHashMap<Integer, Brain>();
-		defaultAntSetup.put(10, new Explorer());
-		defaultAntSetup.put(10, new Follower());
-		defaultAntSetup.put(10, new Rebel());
-		
+		// Init waves
+		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo;
+
+		// First wave
+		waveOne = new ConcurrentHashMap<Brain, Integer>();
+		waveOne.put(new Explorer(), 10);
+
+		// Second wave
+		waveTwo = new ConcurrentHashMap<Brain, Integer>();
+		waveTwo.put(new Follower(), 10);
+
+		// Add waves to antSetup
+		AntSetup defaultAntSetup = new AntSetup();
+		defaultAntSetup.add(waveOne);
+		defaultAntSetup.add(waveTwo);
+
 		// Set default parameters
 		setMaxIterations(100);
-		setantSetup(defaultAntSetup);
+		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
 
 		// Init ants arraylist
-		this.ants = new ArrayList<Ant>(this.maxIterations);
+		this.ants = new LinkedList<ArrayList<Ant>>();
 
 	}
 
 	/**
 	 * Setup antRunner by creating ants.
 	 * 
-	 * @param antMap Map containing the amount of ants which should be created with the associated brain. Example: (10 => Explorer), (25 => Follower) will create 10 explorers and 25 followers.
+	 * @param antMap
+	 *            Map containing the amount of ants which should be created with
+	 *            the associated brain. Example: (10 => Explorer), (25 =>
+	 *            Follower) will create 10 explorers and 25 followers.
 	 */
-	private void _createAnts(ConcurrentHashMap<Integer, Brain> antMap) {
+	private void _createAnts(AntSetup antMap) {
 
 		// Init ant ArrayList
-		this.ants = new ArrayList<Ant>();
-		
-		// Iterate over HashMap
-		for(Map.Entry<Integer, Brain> cursor : antMap.entrySet()) {
-			
-			// Create new ants
-			for (int i = 0; i < cursor.getKey(); i++) {
-				ants.add(new Ant(cursor.getValue(), getMaxIterations(), getPheromoneAmount()));
+		this.ants = new LinkedList<ArrayList<Ant>>();
+
+		// Iterate over antMap
+		Iterator<ConcurrentHashMap<Brain, Integer>> it = antMap.iterator();
+		while (it.hasNext()) {
+
+			// Init list for current wave
+			ArrayList<Ant> wave = new ArrayList<Ant>();
+
+			// Iterate over HashMap
+			for (Map.Entry<Brain, Integer> cursor : it.next().entrySet()) {
+
+				// Create new ants
+				for (int i = 0; i < cursor.getValue(); i++) {
+					wave.add(new Ant(cursor.getKey(), getMaxIterations(),
+							getPheromoneAmount()));
+					System.out.println(cursor.getKey());
+				}
+
 			}
-			
+
+			this.ants.add(wave);
+
 		}
-		
+
 	}
 
 	/**
 	 * Returns true if both start and goal locations are valid.
+	 * 
 	 * @param maze
 	 * @param startLocation
 	 * @param goalLocation
 	 * @return
 	 */
-	private boolean _checkMaze(Maze maze, int[] startLocation, int[] goalLocation){
-		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());		
+	private boolean _checkMaze(Maze maze, int[] startLocation,
+			int[] goalLocation) {
+		return (maze.getNode(startLocation).isAccessible() && maze.getNode(
+				goalLocation).isAccessible());
 	}
-	
+
 	/**
 	 * Run ants!
 	 */
 	public void run() {
-		if(_checkMaze(maze, startLocation, goalLocation)==false){
+		if (_checkMaze(maze, startLocation, goalLocation) == false) {
 			System.out.println("Start or goal location invalid!");
 			return;
 		}
-		
-		// Create new thread pool
-		ExecutorService executorService = Executors.newFixedThreadPool(10);
-		
-		// Create new callable tasks collection
-		List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
-		
-		// Add ants to task list
-		for (final Ant a : getAnts()) {
-			tasks.add(new Callable<Void>() {
-				public Void call() {
-					System.out.println("Asynchronous task");
-					a.run(getMaze(), getStartLocation(), getGoalLocation());
-					return null;
-				}
-			});
+
+		// Loop ant waves
+		for (ArrayList<Ant> alist : getAnts()) {
+
+			// Create new thread pool
+			ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+			// Create new callable tasks collection
+			List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
+
+			// Add ants to task list
+			for (final Ant a : alist) {
+				tasks.add(new Callable<Void>() {
+					public Void call() {
+						System.out.println("Asynchronous task");
+						a.run(getMaze(), getStartLocation(), getGoalLocation());
+						return null;
+					}
+				});
+			}
+
+			try {
+				// Run ants!
+				executorService.invokeAll(tasks);
+
+				// Display maze once its finished
+				System.out.println("Ants done!");
+
+				executorService.shutdown();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				executorService.shutdown();
+			}
+
 		}
 
-		try {
-			// Run ants!
-			executorService.invokeAll(tasks);
-			
-			// Display maze once its finished
-			System.out.println("Ants done!");
-			
-			executorService.shutdown();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			executorService.shutdown();
-		}
-		
 	}
 
 	/**
 	 * Retrieves result of all ants after Ant run.
+	 * 
 	 * @return ArrayList of paths (path in Node[] form)
 	 */
 	public ArrayList<Node[]> getResults() {
-		
+
 		// Prepare return array
 		ArrayList<Node[]> result = new ArrayList<Node[]>();
-		
-		// Loop ants
-		for(Ant a : this.getAnts()) {
-			
-			// Get path
-			if(a.path != null) {
-				Node[] path = (Node[]) a.path.toArray();
-				result.add(path);
+
+		// Loop ant list
+		for (ArrayList<Ant> alist : this.getAnts()) {
+
+			// Loop ants
+			for (Ant a : alist) {
+
+				// Get path
+				if (a.path != null) {
+					Node[] path = (Node[]) a.path.toArray();
+					result.add(path);
+				}
+
 			}
-			
+
 		}
-		
+
 		return result;
-		
+
 	}
-	
+
 	/**
 	 * @return the maxIterations
 	 */
@@ -178,7 +219,7 @@ public class AntRunner extends Thread {
 	/**
 	 * @return the antSetup
 	 */
-	public ConcurrentHashMap<Integer, Brain> getantSetup() {
+	public AntSetup getAntSetup() {
 		return antSetup;
 	}
 
@@ -186,7 +227,7 @@ public class AntRunner extends Thread {
 	 * @param antSetup
 	 *            the antSetup to set
 	 */
-	public void setantSetup(ConcurrentHashMap<Integer, Brain> antSetup) {
+	public void setAntSetup(AntSetup antSetup) {
 		this.antSetup = antSetup;
 	}
 
@@ -234,11 +275,11 @@ public class AntRunner extends Thread {
 	public void setMaze(Maze maze) {
 		this.maze = maze;
 	}
-	
+
 	/**
 	 * @return the ants
 	 */
-	public ArrayList<Ant> getAnts() {
+	public LinkedList<ArrayList<Ant>> getAnts() {
 		return ants;
 	}
 

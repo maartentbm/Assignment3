@@ -14,7 +14,7 @@ public class Grid {
 		setWidth(width);
 		setHeight(height);
 	}
-
+	
 	public Node[][] getGrid() {
 		return grid;
 	}

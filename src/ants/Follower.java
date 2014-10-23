@@ -8,7 +8,8 @@ import node.Node;
 public class Follower implements Brain {
 
 	/**
-	 * This decides on which node to to go The Follower Brain takes the path with the most pheromone
+	 * This decides on which node to to go The Follower Brain takes the path
+	 * with the most pheromone
 	 * 
 	 * @throws Exception
 	 */
@@ -19,26 +20,19 @@ public class Follower implements Brain {
 		double sum = 0;
 		// Check for every neighbouring cell
 		for (int i = 0; i < list.size(); i++) {
-			
-			if(list.get(i) == null)
-				continue;
-			
-			sum = sum + list.get(i).getPheromoneLevel();
+
+			sum += list.get(i).getPheromoneLevel();
 		}
-		System.out.println("Out of " + sum);
 		// We want 0 exclusive and 1 inclusive
 		// Thats why we do 1-random. It doesn't allow zero.
 		double chosen = (1 - random.nextDouble()) * sum;
-		System.out.println("Look for " + chosen + "\n");
 
-		double current = 0;
 		int node = 0;
+		double current = 0;
 		for (int i = 0; i < list.size(); i++) {
-			if (chosen > current) {
-				System.out.println("Between 0 and " + current);
-				current = list.get(i).getPheromoneLevel();
-				chosen = chosen - current;
-			} else {
+			current = list.get(i).getPheromoneLevel();
+			chosen -= current;
+			if (chosen < 0) {
 				node = i;
 				break;
 			}
@@ -46,7 +40,6 @@ public class Follower implements Brain {
 		// System.out.println("Chosen the "+node);
 		return list.get(node);
 	}
-	
 
 	@Override
 	public String toString() {

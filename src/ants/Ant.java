@@ -66,6 +66,9 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
+		
+		System.out.println("Ant started: "+brain+"\n");
+		
 		location = startLocation;
 		path.add(maze.getNode(location));
 		ArrayList<Node> toGo = new ArrayList<Node>();
@@ -76,11 +79,11 @@ public class Ant {
 
 		for (int i = 0; i < maxAge; i++) {
 			// CONS
-			System.out.println("[Ant|run] Location: " + location[0] + " " + location[1]);
+		//	System.out.println("[Ant|run] Location: " + location[0] + " " + location[1]);
 
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
-				System.out.println("[Ant|run] Reached goal");
+				//System.out.println("[Ant|run] Reached goal");
 				spreadPheromone();
 				return;
 			}
@@ -100,7 +103,7 @@ public class Ant {
 				System.out.println("Can't find a next node from location (" + location[0] + ", " + location[0] + "). (previous path: " + path + ", current brain: " + this.brain + ")");
 			}
 		}
-		System.out.println("This ant died of old age.");
+		System.out.println("Ant: "+brain+"\nThis ant died of old age.\n");
 	}
 
 	private ArrayList<Node> selectNeighbours() {
@@ -135,9 +138,8 @@ public class Ant {
 		for (int i = 0; i < route.size() - 1; i++) {
 			route.get(i).updatePheromoneLevel(newPheromones);
 		}
-
-		System.out.println("Reached the end in " + path.size() + " steps.");
-		System.out.println("Releasing " + newPheromones + " onto the path.");
+		// Not very readable like this, but keeps the message in 1 part with multitreating.
+		System.out.println("Ant: "+ brain + "\nReached the end in " + path.size() + " steps.\nReleasing " + newPheromones + " onto the path.\n");
 	}
 
 	// If we find a dead end.
@@ -145,8 +147,9 @@ public class Ant {
 		int size = path.size();
 		for (int i = size - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
 			// Step back is there are less then three accesible neighbours.
-			int[] loc = path.get(i).getLocation();
-			System.out.println("[Ant|backOff] Removing: " + loc[0] + "x" + loc[1]);
+			
+			//int[] loc = path.get(i).getLocation();
+			//System.out.println("[Ant|backOff] Removing: " + loc[0] + "x" + loc[1]);
 			path.remove(i);
 		}
 		// you are now on the old crossroad.
