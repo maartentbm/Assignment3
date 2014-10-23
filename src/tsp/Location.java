@@ -2,6 +2,11 @@ package tsp;
 
 import java.util.ArrayList;
 
+/**
+ * Location containing an x and y and a list of routes departing from it
+ * @author robin
+ *
+ */
 public class Location {
 	
 	private int x, y;

@@ -25,6 +25,6 @@ public class RoutesParser {
 	}
 	
 	public static double euclid(Location l1, Location l2){
-		return Math.sqrt(Math.pow(l1.getx() - l2.getx(), 2) + Math.pow(l1.gety()+ l2.gety(), 2));
+		return Math.sqrt(Math.pow(l1.getx() - l2.getx(), 2) + Math.pow(l1.gety() - l2.gety(), 2));
 	}
 }
