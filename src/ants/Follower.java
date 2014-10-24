@@ -17,22 +17,31 @@ public class Follower implements Brain {
 		System.out.println("Brain|follower.Decide");
 		Random random = new Random();
 		double sum = 0;
-
+		
 		// Check for every neighbouring cell
 		for (int i = 0; i < list.size(); i++) {
 
+			if(list.get(i) == null) {
+				continue;
+			}
+			
 			// !!!!
 			// We crash at this function?!
 			// !!!!
 			sum += list.get(i).getPheromoneLevel();
 		}
-
+		
 		// We want 0 exclusive and 1 inclusive
 		// Thats why we do 1-random. It doesn't allow zero.
 		double chosen = (1 - random.nextDouble()) * sum;
 		int node = 0;
 		double current = 0;
 		for (int i = 0; i < list.size(); i++) {
+			
+			if(list.get(i) == null) {
+				continue;
+			}
+			
 			current = list.get(i).getPheromoneLevel();
 			chosen -= current;
 			if (chosen < 0) {
