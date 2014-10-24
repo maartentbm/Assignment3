@@ -66,7 +66,7 @@ public abstract class Node {
 	 * @return
 	 */
 	public double getPheromoneLevel() {
-		System.out.println("Getting level form node");
+		// System.out.println("Getting level form node");
 		return pheromoneLevel;
 	}
 
@@ -97,10 +97,18 @@ public abstract class Node {
 	 */
 	public ArrayList<Node> getNeighbours() {
 		ArrayList<Node> list = new ArrayList<Node>();
-		list.add(getNorth());
-		list.add(getEast());
-		list.add(getSouth());
-		list.add(getWest());
+
+		if (getNorth() != null)
+			list.add(getNorth());
+
+		if (getEast() != null)
+			list.add(getEast());
+
+		if (getSouth() != null)
+			list.add(getSouth());
+
+		if (getWest() != null)
+			list.add(getWest());
 
 		return list;
 	}

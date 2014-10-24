@@ -25,9 +25,6 @@ public class Follower implements Brain {
 				continue;
 			}
 			
-			// !!!!
-			// We crash at this function?!
-			// !!!!
 			sum += list.get(i).getPheromoneLevel();
 		}
 		
@@ -42,6 +39,8 @@ public class Follower implements Brain {
 				continue;
 			}
 			
+			// TODO find out why node == 0 when it shouldn't
+			
 			current = list.get(i).getPheromoneLevel();
 			chosen -= current;
 			if (chosen < 0) {
@@ -49,6 +48,7 @@ public class Follower implements Brain {
 				break;
 			}
 		}
+		
 		// System.out.println("Chosen the "+node);
 		return list.get(node);
 	}
