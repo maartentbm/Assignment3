@@ -81,7 +81,7 @@ public class Ant {
 			if (Arrays.equals(location, goalLocation)) {
 				// System.out.println("[Ant|run] Reached goal");
 				spreadPheromone();
-				
+
 				return;
 			}
 
@@ -89,36 +89,37 @@ public class Ant {
 			toGo = selectNeighbours();
 
 			Node nextNode;
+
 			// Followers don't make loops!
 			if (brain instanceof Follower) {
+
 				nextNode = brain.decide(toGo);
 				if (path.contains(nextNode)) {
 					backOff();
 					nextNode = path.get(path.size() - 1);
 				}
+
 			} else {
 				nextNode = brain.decide(toGo);
 			}
-			
+
 			if (nextNode != null) {
 
 				location = nextNode.getLocation();
 				path.add(maze.getNode(location));
 
 			} else {
-				System.out.println("Can't find a next node from location ("
-						+ location[0] + ", " + location[0]
-						+ "). (previous path: " + path + ", current brain: "
-						+ this.brain + ")");
+				System.out.println("Can't find a next node from location (" + location[0] + ", " + location[1] + "). (previous path: " + path + ", current brain: " + this.brain + ")");
 			}
 		}
 		System.out.println("Ant: " + brain + "\nThis ant died of old age.\n");
 	}
 
 	private ArrayList<Node> selectNeighbours() {
+
 		// The neighbours of current locations
 		ArrayList<Node> list = path.get(path.size() - 1).getNeighbours();
-
+		
 		if (accessibleNeighbours(list) < 2) {
 			backOff();
 		}
@@ -127,12 +128,15 @@ public class Ant {
 		list = path.get(path.size() - 1).getNeighbours();
 		// We do not want to move back to where we came from.
 		list.remove(path.get(path.size() - 2));
+
+		if (list.size() == 0)
+			System.out.println("Empty list!");
+
 		return list;
 	}
 
 	/**
-	 * Add pheromone to node based on path. Currently adds uniquely to nodes in
-	 * reversed quadratic comparison. Aka: 1/x^2.
+	 * Add pheromone to node based on path. Currently adds uniquely to nodes in reversed quadratic comparison. Aka: 1/x^2.
 	 */
 	private void spreadPheromone() {
 
@@ -140,27 +144,24 @@ public class Ant {
 		ArrayList<Node> route = new ArrayList<Node>();
 
 		// Add to route unique from path
-		for (int i = 0; i < path.size() - 1; i++) {
+		for (int i = 0; i < path.size(); i++) {
 			if (!route.contains(path.get(i))) {
 				route.add(path.get(i));
 			}
 		}
 
-		for (int i = 0; i < route.size() - 1; i++) {
+		for (int i = 0; i < route.size(); i++) {
 			route.get(i).updatePheromoneLevel(newPheromones);
 		}
 		// Not very readable like this, but keeps the message in 1 part with
 		// treating.
-		System.out.println("Ant: " + brain + "\nReached the end in "
-				+ path.size() + " steps.\nReleasing " + newPheromones
-				+ " onto the path.\n");
+		System.out.println("Ant: " + brain + "\nReached the end in " + path.size() + " steps.\nReleasing " + newPheromones + " onto the path.\n");
 	}
 
 	// If we find a dead end.
 	private void backOff() {
 		int size = path.size();
-		for (int i = size - 1; (i >= 0)
-				&& (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+		for (int i = size - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
 			// Step back is there are less then three accesible neighbours.
 
 			// int[] loc = path.get(i).getLocation();

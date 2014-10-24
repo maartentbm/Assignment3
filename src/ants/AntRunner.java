@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import maze.Maze;
-import node.Node;
+import maze.ResultSet;
 
 public class AntRunner extends Thread {
 
@@ -48,31 +48,31 @@ public class AntRunner extends Thread {
 
 		// Init waves
 		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo, waveThree;
-		
+
 		// First wave
 		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 200);
+		waveOne.put(new Explorer(), 100);
 
 		// Second wave
 		waveTwo = new ConcurrentHashMap<Brain, Integer>();
-		waveTwo.put(new Rebel(), 20);
-		waveTwo.put(new Follower(), 150);
-		
+		// waveTwo.put(new Rebel(), 20);
+		waveTwo.put(new Follower(), 100);
+
 		// Wave three: The tracker gives us the most likely result.
 		waveThree = new ConcurrentHashMap<Brain, Integer>();
 		waveThree.put(new Tracker(), 1);
-		
+
 		// Add waves to antSetup
 		AntSetup defaultAntSetup = new AntSetup();
 		defaultAntSetup.add(waveOne);
 		defaultAntSetup.add(waveTwo);
 
 		// Set default parameters
-	// Highscores to guess an number of iterations.
-	// Easy: 59
-	// Medium:
-	// Hard:
-	
+		// Highscores to guess an number of iterations.
+		// Easy: 59
+		// Medium:
+		// Hard:
+
 		setMaxIterations(100);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
@@ -86,10 +86,7 @@ public class AntRunner extends Thread {
 	/**
 	 * Setup antRunner by creating ants.
 	 * 
-	 * @param antMap
-	 *            Map containing the amount of ants which should be created with
-	 *            the associated brain. Example: (10 => Explorer), (25 =>
-	 *            Follower) will create 10 explorers and 25 followers.
+	 * @param antMap Map containing the amount of ants which should be created with the associated brain. Example: (10 => Explorer), (25 => Follower) will create 10 explorers and 25 followers.
 	 */
 	private void _createAnts(AntSetup antMap) {
 
@@ -108,8 +105,7 @@ public class AntRunner extends Thread {
 
 				// Create new ants
 				for (int i = 0; i < cursor.getValue(); i++) {
-					wave.add(new Ant(cursor.getKey(), getMaxIterations(),
-							getPheromoneAmount()));
+					wave.add(new Ant(cursor.getKey(), getMaxIterations(), getPheromoneAmount()));
 					System.out.println(cursor.getKey());
 				}
 			}
@@ -126,10 +122,8 @@ public class AntRunner extends Thread {
 	 * @param goalLocation
 	 * @return
 	 */
-	private boolean _checkMaze(Maze maze, int[] startLocation,
-			int[] goalLocation) {
-		return (maze.getNode(startLocation).isAccessible() && maze.getNode(
-				goalLocation).isAccessible());
+	private boolean _checkMaze(Maze maze, int[] startLocation, int[] goalLocation) {
+		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());
 	}
 
 	/**
@@ -183,10 +177,10 @@ public class AntRunner extends Thread {
 	 * 
 	 * @return ArrayList of paths (path in Node[] form)
 	 */
-	public ArrayList<Node[]> getResults() {
+	public ResultSet getResults() {
 
 		// Prepare return array
-		ArrayList<Node[]> result = new ArrayList<Node[]>();
+		ResultSet result = new ResultSet();
 
 		// Loop ant list
 		for (ArrayList<Ant> alist : this.getAnts()) {
@@ -195,9 +189,18 @@ public class AntRunner extends Thread {
 			for (Ant a : alist) {
 
 				// Get path
-				if (a.path != null) {
-					Node[] path = (Node[]) a.path.toArray();
-					result.add(path);
+				if (a.path != null && a.path.size() > 0) {
+					
+					// Verify that the Ant reached the endpoint
+					int[] lastLoc = a.path.get(a.path.size() - 1).getLocation();
+					int[] goalLoc = getGoalLocation();
+					
+					if (lastLoc[0] == goalLoc[0] && lastLoc[1] == goalLoc[1]) {
+
+						// Add path to result
+						result.add(a.path);
+
+					}
 				}
 
 			}
@@ -216,8 +219,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param maxIterations
-	 *            the maxIterations to set
+	 * @param maxIterations the maxIterations to set
 	 */
 	public void setMaxIterations(int maxIterations) {
 		this.maxIterations = maxIterations;
@@ -231,8 +233,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param antSetup
-	 *            the antSetup to set
+	 * @param antSetup the antSetup to set
 	 */
 	public void setAntSetup(AntSetup antSetup) {
 		this.antSetup = antSetup;
@@ -246,8 +247,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param pheromoneAmount
-	 *            the pheromoneAmount to set
+	 * @param pheromoneAmount the pheromoneAmount to set
 	 */
 	public void setPheromoneAmount(float pheromoneAmount) {
 		this.pheromoneAmount = pheromoneAmount;
@@ -261,8 +261,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param pheromoneEvaporation
-	 *            the pheromoneEvaporation to set
+	 * @param pheromoneEvaporation the pheromoneEvaporation to set
 	 */
 	public void setPheromoneEvaporation(float pheromoneEvaporation) {
 		this.pheromoneEvaporation = pheromoneEvaporation;
@@ -276,8 +275,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param maze
-	 *            the maze to set
+	 * @param maze the maze to set
 	 */
 	public void setMaze(Maze maze) {
 		this.maze = maze;
@@ -298,8 +296,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param startLocation
-	 *            the startLocation to set
+	 * @param startLocation the startLocation to set
 	 */
 	public void setStartLocation(int[] startLocation) {
 		this.startLocation = startLocation;
@@ -313,8 +310,7 @@ public class AntRunner extends Thread {
 	}
 
 	/**
-	 * @param goalLocation
-	 *            the goalLocation to set
+	 * @param goalLocation the goalLocation to set
 	 */
 	public void setGoalLocation(int[] goalLocation) {
 		this.goalLocation = goalLocation;
