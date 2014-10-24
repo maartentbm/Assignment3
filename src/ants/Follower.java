@@ -14,7 +14,9 @@ public class Follower implements Brain {
 	 * @throws Exception
 	 */
 	public Node decide(ArrayList<Node> list) {
-		System.out.println("Brain|follower.Decide");
+		
+		//System.out.println("Brain|follower.Decide");
+		
 		Random random = new Random();
 		double sum = 0;
 		

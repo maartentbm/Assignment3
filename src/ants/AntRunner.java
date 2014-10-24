@@ -47,33 +47,39 @@ public class AntRunner extends Thread {
 	private void _setDefaults() {
 
 		// Init waves
-		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo, waveThree;
+		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo, waveThree, waveFour;
 
 		// First wave
 		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 100);
+		waveOne.put(new Explorer(), 1000);
 
 		// Second wave
 		waveTwo = new ConcurrentHashMap<Brain, Integer>();
 		// waveTwo.put(new Rebel(), 20);
 		waveTwo.put(new Follower(), 100);
 
-		// Wave three: The tracker gives us the most likely result.
+		// Third wave
 		waveThree = new ConcurrentHashMap<Brain, Integer>();
-		waveThree.put(new Tracker(), 1);
+		waveThree.put(new Explorer(), 200);
+
+		// Fourth wave
+		waveFour = new ConcurrentHashMap<Brain, Integer>();
+		waveFour.put(new Explorer(), 200);
 
 		// Add waves to antSetup
 		AntSetup defaultAntSetup = new AntSetup();
 		defaultAntSetup.add(waveOne);
 		defaultAntSetup.add(waveTwo);
+		//defaultAntSetup.add(waveThree);
+		//defaultAntSetup.add(waveFour);
 
 		// Set default parameters
 		// Highscores to guess an number of iterations.
-		// Easy: 59
+		// Easy: 51
 		// Medium:
 		// Hard:
 
-		setMaxIterations(100);
+		setMaxIterations(1000);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
@@ -123,6 +129,10 @@ public class AntRunner extends Thread {
 	 * @return
 	 */
 	private boolean _checkMaze(Maze maze, int[] startLocation, int[] goalLocation) {
+
+		System.out.println(maze.getNode(startLocation));
+		System.out.println(maze.getNode(goalLocation));
+
 		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());
 	}
 
@@ -139,7 +149,7 @@ public class AntRunner extends Thread {
 		for (ArrayList<Ant> alist : getAnts()) {
 
 			// Create new thread pool
-			ExecutorService executorService = Executors.newFixedThreadPool(10);
+			ExecutorService executorService = Executors.newFixedThreadPool(25);
 
 			// Create new callable tasks collection
 			List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
@@ -168,6 +178,8 @@ public class AntRunner extends Thread {
 				executorService.shutdown();
 			}
 
+			// TODO evaporation
+			
 		}
 
 	}
@@ -190,11 +202,11 @@ public class AntRunner extends Thread {
 
 				// Get path
 				if (a.path != null && a.path.size() > 0) {
-					
+
 					// Verify that the Ant reached the endpoint
 					int[] lastLoc = a.path.get(a.path.size() - 1).getLocation();
 					int[] goalLoc = getGoalLocation();
-					
+
 					if (lastLoc[0] == goalLoc[0] && lastLoc[1] == goalLoc[1]) {
 
 						// Add path to result

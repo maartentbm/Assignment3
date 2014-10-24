@@ -2,16 +2,12 @@ import java.io.File;
 
 import maze.Maze;
 import maze.MazeParser;
+import maze.ResultSet;
 import ants.Ant;
 import ants.AntRunner;
 import ants.Explorer;
 
 public class Assignment3 {
-
-	public static final int EAST = 0;
-	public static final int NORTH = 1;
-	public static final int WEST = 2;
-	public static final int SOUTH = 3;
 
 	public static void main(String[] args) {
 
@@ -21,8 +17,8 @@ public class Assignment3 {
 		Maze m = mp.createMaze(new File("res/medium maze.txt"));
 		System.out.println(m);
 
-		//System.exit(0);
-		
+		// System.exit(0);
+
 		// Run ants!
 		try {
 
@@ -30,7 +26,7 @@ public class Assignment3 {
 			int[] startLoc = new int[] { 0, 0 };
 
 			// Set goal location
-			int[] goalLoc = new int[] { 6, 0 };
+			int[] goalLoc = new int[] { 49, 39 };
 
 			// Create
 			AntRunner runner = new AntRunner(m, startLoc, goalLoc);
@@ -40,7 +36,23 @@ public class Assignment3 {
 			runner.join();
 
 			// Get results
-			System.out.println("Shortest path: " + runner.getResults().getShortestPath());
+			ResultSet res = runner.getResults();
+			
+			// Print results to file
+			res.printToFile(new File("res/test.txt"));
+
+			// Display results in console
+			if (res.getShortestPath() != null) {
+
+				System.out.println("Shortest path: " + res.getShortestPath());
+				System.out.println("Shortest path: " + res.getShortestPath().getDirectionPath());
+				System.out.println("       length: " + res.getShortestPath().size());
+
+			} else {
+				
+				System.out.println("No path found!");
+				
+			}
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -50,15 +62,6 @@ public class Assignment3 {
 		 * REMINDERS Test1 S: 0,0 G: 4,0 Test2 S: 0,0 G: 0,4 Test3 S: 0,2 G: 7,2
 		 */
 
-		// Maze Test = mp.createMaze(new File("res/Test4-e.txt"));
-		// System.out.println(Test);
-		// System.out.println("\n");
-		// AntRunner runnerTest1 = new AntRunner(Test, new int[]{8,1}, new int[]{8,7});
-		// runnerTest1.start();
-
-		// Medium maze
-		// Maze medium = mp.createMaze(new File("res/medium maze.txt"));
-		// System.out.println(medium);
 	}
 
 }

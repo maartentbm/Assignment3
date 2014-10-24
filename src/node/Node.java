@@ -2,6 +2,8 @@ package node;
 
 import java.util.ArrayList;
 
+import maze.Direction;
+
 public abstract class Node {
 
 	private Node north, east, south, west;
@@ -111,6 +113,54 @@ public abstract class Node {
 			list.add(getWest());
 
 		return list;
+	}
+
+	public int getRelativeDirectionTo(Node other) {
+
+		if(other == null) {
+			System.out.println("Error! Invalid direction. (other node is null)");
+			return -1;
+		}
+		
+		// Calculate direction
+		int[] myLoc = getLocation();
+		int[] otLoc = other.getLocation();
+		
+		// EAST / WEST
+		if(myLoc[0] == otLoc[0]) {
+			
+			if(otLoc[1] == myLoc[1] - 1) {
+				return Direction.SOUTH;
+			}
+			
+			if(otLoc[1] == myLoc[1] + 1) {
+				return Direction.NORTH;
+			}
+			
+		}
+		
+		// NORTH / SOUTH
+		if(myLoc[1] == otLoc[1]) {
+			
+			if(otLoc[0] == myLoc[0] - 1) {
+				return Direction.EAST;
+			}
+			
+			if(otLoc[0] == myLoc[0] + 1) {
+				return Direction.WEST;
+			}
+			
+		}
+		
+		// Same node
+		if(myLoc[1] == otLoc[1] && myLoc[0] == otLoc[0]) {
+			return -1;
+		}
+		
+		// Node 
+		System.out.println("Other error?");
+		return -1;
+
 	}
 
 	@Override

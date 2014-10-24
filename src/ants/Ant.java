@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import maze.Maze;
+import maze.Path;
 import node.Node;
 
 public class Ant {
@@ -13,22 +14,18 @@ public class Ant {
 	private int[] location = new int[2];
 	private Brain brain;
 
-	public ArrayList<Node> path;
+	public Path path;
 
 	public Ant(int newMaxAge, float newPheromoneAmount) {
 		brain = new Explorer();
 		maxAge = newMaxAge;
 		pheromoneAmount = newPheromoneAmount;
-
-		path = new ArrayList<Node>();
 	}
 
 	public Ant(Brain newBrain, int newMaxAge, float newPheromoneAmount) {
 		brain = newBrain;
 		maxAge = newMaxAge;
 		pheromoneAmount = newPheromoneAmount;
-
-		path = new ArrayList<Node>();
 	}
 
 	/**
@@ -66,7 +63,10 @@ public class Ant {
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
 
 		System.out.println("Ant started: " + brain + "\n");
-
+		
+		// Create path
+		path = new Path(maze.getNode(startLocation));
+		
 		location = startLocation;
 		path.add(maze.getNode(location));
 		ArrayList<Node> toGo = new ArrayList<Node>();
@@ -75,6 +75,8 @@ public class Ant {
 		toGo = maze.getNode(location).getNeighbours();
 		path.add(brain.decide(toGo));
 
+		
+		
 		for (int i = 0; i < maxAge; i++) {
 
 			// Goal reached?
