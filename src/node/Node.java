@@ -65,6 +65,7 @@ public abstract class Node {
 	 * @return
 	 */
 	public double getPheromoneLevel() {
+		System.out.println("Getting level form node");
 		return pheromoneLevel;
 	}
 

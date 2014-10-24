@@ -14,19 +14,22 @@ public class Follower implements Brain {
 	 * @throws Exception
 	 */
 	public Node decide(ArrayList<Node> list) {
-
+		System.out.println("Brain|follower.Decide");
 		Random random = new Random();
-
 		double sum = 0;
+
 		// Check for every neighbouring cell
 		for (int i = 0; i < list.size(); i++) {
 
+			// !!!!
+			// We crash at this function?!
+			// !!!!
 			sum += list.get(i).getPheromoneLevel();
 		}
+
 		// We want 0 exclusive and 1 inclusive
 		// Thats why we do 1-random. It doesn't allow zero.
 		double chosen = (1 - random.nextDouble()) * sum;
-
 		int node = 0;
 		double current = 0;
 		for (int i = 0; i < list.size(); i++) {

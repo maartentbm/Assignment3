@@ -1,10 +1,12 @@
 package maze;
 
+
+
 public class Maze extends Grid {
 	
 	public Maze() {
 	}
-
+	
 	public String toString() {
 
 		String disp = "";

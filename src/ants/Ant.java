@@ -2,8 +2,6 @@ package ants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import maze.Maze;
 import node.Node;
@@ -66,9 +64,9 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
-		
-		System.out.println("Ant started: "+brain+"\n");
-		
+
+		System.out.println("Ant started: " + brain + "\n");
+
 		location = startLocation;
 		path.add(maze.getNode(location));
 		ArrayList<Node> toGo = new ArrayList<Node>();
@@ -78,32 +76,43 @@ public class Ant {
 		path.add(brain.decide(toGo));
 
 		for (int i = 0; i < maxAge; i++) {
-			// CONS
-		//	System.out.println("[Ant|run] Location: " + location[0] + " " + location[1]);
 
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
-				//System.out.println("[Ant|run] Reached goal");
+				// System.out.println("[Ant|run] Reached goal");
 				spreadPheromone();
+				
 				return;
 			}
 
 			// Collect neighbours where I can go.
 			toGo = selectNeighbours();
 
-			// Brain decide, makes behaviour.
-			Node nextNode = brain.decide(toGo);
-
+			Node nextNode;
+			// Followers don't make loops!
+			if (brain instanceof Follower) {
+				nextNode = brain.decide(toGo);
+				if (path.contains(nextNode)) {
+					backOff();
+					nextNode = path.get(path.size() - 1);
+				}
+			} else {
+				nextNode = brain.decide(toGo);
+			}
+			
 			if (nextNode != null) {
 
 				location = nextNode.getLocation();
 				path.add(maze.getNode(location));
 
 			} else {
-				System.out.println("Can't find a next node from location (" + location[0] + ", " + location[0] + "). (previous path: " + path + ", current brain: " + this.brain + ")");
+				System.out.println("Can't find a next node from location ("
+						+ location[0] + ", " + location[0]
+						+ "). (previous path: " + path + ", current brain: "
+						+ this.brain + ")");
 			}
 		}
-		System.out.println("Ant: "+brain+"\nThis ant died of old age.\n");
+		System.out.println("Ant: " + brain + "\nThis ant died of old age.\n");
 	}
 
 	private ArrayList<Node> selectNeighbours() {
@@ -122,9 +131,11 @@ public class Ant {
 	}
 
 	/**
-	 * Add pheromone to node based on path. Currently adds uniquely to nodes in reversed quadratic comparison. Aka: 1/x^2.
+	 * Add pheromone to node based on path. Currently adds uniquely to nodes in
+	 * reversed quadratic comparison. Aka: 1/x^2.
 	 */
 	private void spreadPheromone() {
+
 		float newPheromones = pheromoneAmount / (path.size() ^ 2);
 		ArrayList<Node> route = new ArrayList<Node>();
 
@@ -138,18 +149,23 @@ public class Ant {
 		for (int i = 0; i < route.size() - 1; i++) {
 			route.get(i).updatePheromoneLevel(newPheromones);
 		}
-		// Not very readable like this, but keeps the message in 1 part with multitreating.
-		System.out.println("Ant: "+ brain + "\nReached the end in " + path.size() + " steps.\nReleasing " + newPheromones + " onto the path.\n");
+		// Not very readable like this, but keeps the message in 1 part with
+		// treating.
+		System.out.println("Ant: " + brain + "\nReached the end in "
+				+ path.size() + " steps.\nReleasing " + newPheromones
+				+ " onto the path.\n");
 	}
 
 	// If we find a dead end.
 	private void backOff() {
 		int size = path.size();
-		for (int i = size - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+		for (int i = size - 1; (i >= 0)
+				&& (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
 			// Step back is there are less then three accesible neighbours.
-			
-			//int[] loc = path.get(i).getLocation();
-			//System.out.println("[Ant|backOff] Removing: " + loc[0] + "x" + loc[1]);
+
+			// int[] loc = path.get(i).getLocation();
+			// System.out.println("[Ant|backOff] Removing: " + loc[0] + "x" +
+			// loc[1]);
 			path.remove(i);
 		}
 		// you are now on the old crossroad.

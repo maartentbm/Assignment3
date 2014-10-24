@@ -15,6 +15,16 @@ public class Grid {
 		setHeight(height);
 	}
 	
+	public void evaporate(double PheromoneEvaporation){
+		Node thisNode;
+		for(int x = 0; x < getWidth(); x++){
+			for (int y = 0; y < getHeight(); y++) {
+				thisNode = getGrid()[x][y];
+				thisNode.updatePheromoneLevel(thisNode.getPheromoneLevel()*(1-PheromoneEvaporation));
+			}
+		}
+	}
+	
 	public Node[][] getGrid() {
 		return grid;
 	}

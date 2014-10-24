@@ -47,22 +47,32 @@ public class AntRunner extends Thread {
 	private void _setDefaults() {
 
 		// Init waves
-		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo;
-
+		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo, waveThree;
+		
 		// First wave
 		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 10);
+		waveOne.put(new Explorer(), 200);
 
 		// Second wave
 		waveTwo = new ConcurrentHashMap<Brain, Integer>();
-		waveTwo.put(new Follower(), 10);
-
+		waveTwo.put(new Rebel(), 20);
+		waveTwo.put(new Follower(), 150);
+		
+		// Wave three: The tracker gives us the most likely result.
+		waveThree = new ConcurrentHashMap<Brain, Integer>();
+		waveThree.put(new Tracker(), 1);
+		
 		// Add waves to antSetup
 		AntSetup defaultAntSetup = new AntSetup();
 		defaultAntSetup.add(waveOne);
 		defaultAntSetup.add(waveTwo);
 
 		// Set default parameters
+	// Highscores to guess an number of iterations.
+	// Easy: 59
+	// Medium:
+	// Hard:
+	
 		setMaxIterations(100);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
@@ -102,13 +112,10 @@ public class AntRunner extends Thread {
 							getPheromoneAmount()));
 					System.out.println(cursor.getKey());
 				}
-
 			}
 
 			this.ants.add(wave);
-
 		}
-
 	}
 
 	/**
@@ -159,7 +166,7 @@ public class AntRunner extends Thread {
 				executorService.invokeAll(tasks);
 
 				// Display maze once its finished
-				System.out.println("Ants done!");
+				System.out.println("==========\nAnts done!\n==========");
 
 				executorService.shutdown();
 			} catch (InterruptedException e) {
