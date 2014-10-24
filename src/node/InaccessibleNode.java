@@ -13,8 +13,7 @@ public class InaccessibleNode extends Node {
 		return false;
 	}
 	
-	@Override
-	public String toString() {
+	public String toMazeString() {
 		return "[]";
 	}
 	

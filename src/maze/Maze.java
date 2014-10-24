@@ -22,7 +22,7 @@ public class Maze extends Grid {
 
 			// Loop maze columns
 			for (int x = 0; x < getWidth(); x++) {
-				disp += getGrid()[y][x];
+				disp += getGrid()[y][x].toMazeString();
 			}
 
 			// Add right border

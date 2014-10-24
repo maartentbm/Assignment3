@@ -13,8 +13,7 @@ public class AccessibleNode extends Node {
 		return true;
 	}
 	
-	@Override
-	public String toString() {
+	public String toMazeString() {
 		return "  ";
 	}
 	

@@ -6,7 +6,7 @@ public abstract class Node {
 
 	private Node north, east, south, west;
 	private int[] location;
-	
+
 	/**
 	 * Pheromone level.
 	 */
@@ -61,6 +61,7 @@ public abstract class Node {
 
 	/**
 	 * Get the pheromone level of a given connection.
+	 * 
 	 * @param dir
 	 * @return
 	 */
@@ -71,15 +72,17 @@ public abstract class Node {
 
 	/**
 	 * Sets pheromone level one way
+	 * 
 	 * @param dir
 	 * @param p
 	 */
-	public synchronized void setPheromoneLevel(double p){
-		this.pheromoneLevel = p; 
+	public synchronized void setPheromoneLevel(double p) {
+		this.pheromoneLevel = p;
 	}
-	
+
 	/**
 	 * Increase the pheromone level of a given direction by any real value.
+	 * 
 	 * @param dir
 	 * @param p
 	 */
@@ -89,6 +92,7 @@ public abstract class Node {
 
 	/**
 	 * Return array of Node neighbours.
+	 * 
 	 * @return
 	 */
 	public ArrayList<Node> getNeighbours() {
@@ -97,9 +101,17 @@ public abstract class Node {
 		list.add(getEast());
 		list.add(getSouth());
 		list.add(getWest());
-		
+
 		return list;
 	}
+
+	@Override
+	public String toString() {
+
+		return "(" + location[0] + "," + location[1] + ")";
+	}
+
+	public abstract String toMazeString();
 
 	public abstract boolean isAccessible();
 
