@@ -53,6 +53,20 @@ public class Route {
 		return locations[1];
 	}
 	
+	public void setRoute(Location l,double distance, String path){
+		if(l.equals(locations[0])){
+			forwardRoute = path;
+			backwardRoute = DistanceParser.stringInvertor(path);
+			length = distance;
+		}
+		if(l.equals(locations[1])){
+			backwardRoute = path;
+			forwardRoute = DistanceParser.stringInvertor(path);
+			length = distance;
+		}
+		System.out.println("Route.setRoute error");
+	}
+	
 	public String getRouteFrom(Location l){
 		if (locations[0].equals(l)){
 			return forwardRoute;

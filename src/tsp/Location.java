@@ -46,6 +46,18 @@ public class Location {
 		return false;
 	}
 	
+	public Route getRouteTo(Location l){
+		if(containsRouteTo(l)){
+			for(Route r : routes){
+				if(r.getOtherLocation(this).equals(l))
+					return r;
+			}
+		}
+		
+		System.out.println("Location.getRouteTo error");
+		return null;
+	}
+	
 	public ArrayList<Route> getRoutes(){
 		return routes;
 	}
