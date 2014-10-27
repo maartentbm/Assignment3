@@ -74,10 +74,11 @@ public class Ant {
 		toGo = maze.getNode(location).getNeighbours();
 		path.add(brain.decide(toGo));
 
+		// The big loop
+		//
 		for (int i = 0; i < maxAge; i++) {
 
-			System.out.println("Location: " + location[0] + " " + location[1]
-					+ "\nAge: " + i);
+			System.out.println("Location: " + location[0] + " " + location[1]);
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
 				spreadPheromone();
@@ -94,9 +95,7 @@ public class Ant {
 			// Collect neighbours where I can go.
 			toGo = selectNeighbours();
 
-			Node nextNode;
-
-			nextNode = brain.decide(toGo);
+			Node nextNode = brain.decide(toGo);
 			if (path.contains(nextNode)) {
 				backOff(true);
 				nextNode = path.get(path.size() - 1);
@@ -122,6 +121,7 @@ public class Ant {
 		// The neighbours of current locations
 		ArrayList<Node> list = path.get(path.size() - 1).getNeighbours();
 
+		// Catched dead ends.
 		if (accessibleNeighbours(list) < 2) {
 			backOff(false);
 		}
@@ -170,8 +170,10 @@ public class Ant {
 	 */
 	private void backOff(boolean allowToReturn) {
 		int size = path.size();
-		System.out.println("Stuck on: " + path.get(size - 1) + "\nPath size: "+size);
-		for (int i = size - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+		System.out.println("Stuck on: " + path.get(size - 1) + "\nPath size: "
+				+ size);
+		for (int i = size - 1; (i >= 0)
+				&& (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
 			// Step back is there are less then three accesible neighbours.
 			int[] loc = path.get(i).getLocation();
 			System.out.println("[Ant|backOff] Removing: " + loc[0] + "x"
@@ -201,7 +203,7 @@ public class Ant {
 
 			count += neighbours.get(i).isAccessible() ? 1 : 0;
 		}
-		System.out.println("Neighbours "+count);
+		System.out.println("Neighbours " + count);
 		return count;
 	}
 }
