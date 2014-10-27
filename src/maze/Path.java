@@ -6,15 +6,51 @@ import node.Node;
 
 public class Path extends ArrayList<Node> {
 
-	public ArrayList<Integer> directionPath;
-
 	public Path(Node startNode) {
 		this.add(startNode);
-		directionPath = new ArrayList<Integer>();
 	}
 
 	public ArrayList<Integer> getDirectionPath() {
-		return this.directionPath;
+		
+		// Init direction path
+		ArrayList<Integer> dirPath = new ArrayList<Integer>(size()-1);
+		
+		// Check list is large enough
+		if(size() < 1) {
+			return dirPath;
+		}
+		
+		Node prev = null;
+		Integer dir;
+		
+		// Loop nodes
+		for(Node n : this) {
+			
+			if(prev == null) {
+				prev = n;
+				continue;
+			}
+			
+			// Calculate direction
+			dir = n.getRelativeDirectionTo(prev);
+
+			// Check validity
+			if (dir < 0) {
+				System.out.println("\nPATH ERRORR;");
+				System.out.println(prev);
+				System.out.println(n);
+				System.out.println();
+				continue;
+			}
+
+			// Add to path
+			dirPath.add(dir);
+			
+			// Set previous node
+			prev = n;
+		}
+		
+		return dirPath;
 	}
 
 	@Override
@@ -34,19 +70,6 @@ public class Path extends ArrayList<Node> {
 						return false;
 					}
 
-					// Calculate direction and add to path
-					Integer dir = e.getRelativeDirectionTo(prev);
-
-					if (dir < 0) {
-						System.out.println("\nPATH ERRORR;");
-						System.out.println(prev);
-						System.out.println(e);
-						System.out.println();
-						return false;
-					}
-
-					directionPath.add(dir);
-
 				} else {
 					System.out.println("ERROR: Could not calculate direction from previous node.");
 				}
@@ -61,15 +84,16 @@ public class Path extends ArrayList<Node> {
 		// Add node to path
 		return super.add(e);
 	}
-
-	@Override
-	public String toString() {
+	
+	public String toFileString() {
 
 		String str = "";
 
-		for (int i = 0; i < this.directionPath.size(); i++) {
+		ArrayList<Integer> dirPath = this.getDirectionPath();
+		
+		for (int i = 0; i < dirPath.size(); i++) {
 
-			str += this.directionPath.get(i) + ";";
+			str += dirPath.get(i) + ";";
 
 		}
 
