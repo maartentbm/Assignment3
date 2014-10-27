@@ -169,6 +169,20 @@ public abstract class Node {
 		return "(" + location[0] + "," + location[1] + ")";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Node) {
+			
+			Node n = (Node) obj;
+			
+			return n.location[0] == this.location[0] && n.location[1] == this.location[1];
+			
+		}
+		
+		return false;
+	}
+	
 	public abstract String toMazeString();
 
 	public abstract boolean isAccessible();
