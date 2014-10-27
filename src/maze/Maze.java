@@ -1,12 +1,18 @@
 package maze;
 
+import java.util.ArrayList;
 
+import ants.Ant;
 
 public class Maze extends Grid {
-	
-	public Maze() {
+
+	public void evaporate(ArrayList<Ant> antList, float pheromoneEvaporation) {
+		
+		// TODO
+		
+		
 	}
-	
+
 	public String toString() {
 
 		String disp = "";

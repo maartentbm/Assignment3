@@ -37,8 +37,6 @@ public class AntRunner extends Thread {
 		this.startLocation = startLocation;
 		this.goalLocation = goalLocation;
 
-		// Create ants
-		this._createAnts(getAntSetup());
 	}
 
 	/**
@@ -51,27 +49,27 @@ public class AntRunner extends Thread {
 
 		// First wave
 		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 1000);
+		waveOne.put(new Explorer(), 100);
 
 		// Second wave
-		waveTwo = new ConcurrentHashMap<Brain, Integer>();
+		// waveTwo = new ConcurrentHashMap<Brain, Integer>();
 		// waveTwo.put(new Rebel(), 20);
-		waveTwo.put(new Follower(), 100);
+		// waveTwo.put(new Follower(), 100);
 
 		// Third wave
-		waveThree = new ConcurrentHashMap<Brain, Integer>();
-		waveThree.put(new Explorer(), 200);
+		// waveThree = new ConcurrentHashMap<Brain, Integer>();
+		// waveThree.put(new Explorer(), 200);
 
 		// Fourth wave
-		waveFour = new ConcurrentHashMap<Brain, Integer>();
-		waveFour.put(new Explorer(), 200);
+		// waveFour = new ConcurrentHashMap<Brain, Integer>();
+		// waveFour.put(new Explorer(), 200);
 
 		// Add waves to antSetup
 		AntSetup defaultAntSetup = new AntSetup();
 		defaultAntSetup.add(waveOne);
-		defaultAntSetup.add(waveTwo);
-		//defaultAntSetup.add(waveThree);
-		//defaultAntSetup.add(waveFour);
+		// defaultAntSetup.add(waveTwo);
+		// defaultAntSetup.add(waveThree);
+		// defaultAntSetup.add(waveFour);
 
 		// Set default parameters
 		// Highscores to guess an number of iterations.
@@ -84,8 +82,8 @@ public class AntRunner extends Thread {
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
 
-		// Init ants arraylist
-		this.ants = new LinkedList<ArrayList<Ant>>();
+		// Create ants
+		this._createAnts(getAntSetup());
 
 	}
 
@@ -178,8 +176,8 @@ public class AntRunner extends Thread {
 				executorService.shutdown();
 			}
 
-			// TODO evaporation
-			
+			getMaze().evaporate(alist, getPheromoneEvaporation());
+
 		}
 
 	}
@@ -249,6 +247,9 @@ public class AntRunner extends Thread {
 	 */
 	public void setAntSetup(AntSetup antSetup) {
 		this.antSetup = antSetup;
+
+		// Create ants
+		this._createAnts(antSetup);
 	}
 
 	/**
