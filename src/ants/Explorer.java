@@ -3,6 +3,7 @@ package ants;
 import java.util.ArrayList;
 import java.util.Random;
 
+import maze.Path;
 import node.Node;
 
 public class Explorer implements Brain {
@@ -12,7 +13,9 @@ public class Explorer implements Brain {
 	 * 
 	 * @throws Exception
 	 */
-	public Node decide(ArrayList<Node> list){
+	public Node decide(Path path){
+		ArrayList<Node> list = path.get(path.size()-1).getNeighbours();
+		
 		Random random = new Random();
 
 		ArrayList<Node> accessible = new ArrayList<Node>();

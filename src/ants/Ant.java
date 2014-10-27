@@ -61,48 +61,40 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
-
 		System.out.println("Ant started: " + brain + "\n");
-		
+
 		// Create path
 		path = new Path(maze.getNode(startLocation));
-		
+
 		location = startLocation;
 		path.add(maze.getNode(location));
-		ArrayList<Node> toGo = new ArrayList<Node>();
 
 		// First step - without predecessor
-		toGo = maze.getNode(location).getNeighbours();
-		path.add(brain.decide(toGo));
+		path.add(brain.decide(path));
 
-		
-		
+		// The big loop
+		//
 		for (int i = 0; i < maxAge; i++) {
 
+			System.out.println("Location: " + location[0] + " " + location[1]);
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
-				// System.out.println("[Ant|run] Reached goal");
 				spreadPheromone();
-
 				return;
 			}
 
+			// Max path length
+			if (path.size() > 500) {
+				System.out
+						.println("Killed " + brain + "\nReason: Path to long");
+				break;
+			}
+
 			// Collect neighbours where I can go.
-			toGo = selectNeighbours();
-
-			Node nextNode;
-
-			// Followers don't make loops!
-			if (brain instanceof Follower) {
-
-				nextNode = brain.decide(toGo);
-				if (path.contains(nextNode)) {
-					backOff();
-					nextNode = path.get(path.size() - 1);
-				}
-
-			} else {
-				nextNode = brain.decide(toGo);
+			Node nextNode = brain.decide(path);
+			if (path.contains(nextNode)) {
+				backOff(true);
+				nextNode = path.get(path.size() - 1);
 			}
 
 			if (nextNode != null) {
@@ -111,19 +103,23 @@ public class Ant {
 				path.add(maze.getNode(location));
 
 			} else {
-				System.out.println("Can't find a next node from location (" + location[0] + ", " + location[1] + "). (previous path: " + path + ", current brain: " + this.brain + ")");
+				System.out.println("Can't find a next node from location ("
+						+ location[0] + ", " + location[1]
+						+ "). (previous path: " + path + ", current brain: "
+						+ this.brain + ")");
 			}
 		}
-		System.out.println("Ant: " + brain + "\nThis ant died of old age.\n");
+		System.out.println("Killed: " + brain + "\nReason: Took to long");
 	}
 
 	private ArrayList<Node> selectNeighbours() {
 
 		// The neighbours of current locations
 		ArrayList<Node> list = path.get(path.size() - 1).getNeighbours();
-		
+
+		// Catched dead ends.
 		if (accessibleNeighbours(list) < 2) {
-			backOff();
+			backOff(false);
 		}
 
 		list.clear();
@@ -138,7 +134,8 @@ public class Ant {
 	}
 
 	/**
-	 * Add pheromone to node based on path. Currently adds uniquely to nodes in reversed quadratic comparison. Aka: 1/x^2.
+	 * Add pheromone to node based on path. Currently adds uniquely to nodes in
+	 * reversed quadratic comparison. Aka: 1/x^2.
 	 */
 	private void spreadPheromone() {
 
@@ -157,26 +154,39 @@ public class Ant {
 		}
 		// Not very readable like this, but keeps the message in 1 part with
 		// treating.
-		System.out.println("Ant: " + brain + "\nReached the end in " + path.size() + " steps.\nReleasing " + newPheromones + " onto the path.\n");
+		System.out.println("Ant: " + brain + "\nReached the end in "
+				+ path.size() + " steps.\nReleasing " + newPheromones
+				+ " onto the path.\n");
 	}
 
-	// If we find a dead end.
-	private void backOff() {
+	/**
+	 * Goes back to last decision Boolean : Allowed to return:
+	 * 
+	 * @param allowAcces
+	 */
+	private void backOff(boolean allowToReturn) {
 		int size = path.size();
-		for (int i = size - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+		System.out.println("Stuck on: " + path.get(size - 1) + "\nPath size: "
+				+ size);
+		for (int i = size - 1; (i >= 0)
+				&& (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
 			// Step back is there are less then three accesible neighbours.
-
-			// int[] loc = path.get(i).getLocation();
-			// System.out.println("[Ant|backOff] Removing: " + loc[0] + "x" +
-			// loc[1]);
+			int[] loc = path.get(i).getLocation();
+			System.out.println("[Ant|backOff] Removing: " + loc[0] + "x"
+					+ loc[1]);
+			if (allowToReturn = false) {
+				path.get(i).setPheromoneLevel(0);
+			}
 			path.remove(i);
 		}
 		// you are now on the old crossroad.
+		System.out.println("Backed off to :" + path.get(path.size() - 1));
 	}
 
 	private int accessibleNeighbours(ArrayList<Node> neighbours) {
 
 		if (neighbours == null) {
+			System.out.println("Empty neighbours list");
 			return 0;
 		}
 
@@ -189,6 +199,7 @@ public class Ant {
 
 			count += neighbours.get(i).isAccessible() ? 1 : 0;
 		}
+		System.out.println("Neighbours " + count);
 		return count;
 	}
 }
