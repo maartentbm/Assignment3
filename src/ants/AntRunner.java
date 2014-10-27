@@ -44,40 +44,32 @@ public class AntRunner extends Thread {
 	 */
 	private void _setDefaults() {
 
+		// Create antSetup
+		AntSetup defaultAntSetup = new AntSetup();
+
 		// Init waves
-		ConcurrentHashMap<Brain, Integer> waveOne, waveTwo, waveThree, waveFour;
+		ConcurrentHashMap<Brain, Integer> wave_01, wave_02;
 
 		// First wave
-		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 1);
+		wave_01 = new ConcurrentHashMap<Brain, Integer>();
+		wave_01.put(new Explorer(), 100);
+		defaultAntSetup.add(wave_01);
+		
+		
+		for (int i = 10; i > 0; i--) {
 
-		// Second wave
-		// waveTwo = new ConcurrentHashMap<Brain, Integer>();
-		// waveTwo.put(new Rebel(), 20);
-		// waveTwo.put(new Follower(), 100);
-
-		// Third wave
-		// waveThree = new ConcurrentHashMap<Brain, Integer>();
-		// waveThree.put(new Explorer(), 200);
-
-		// Fourth wave
-		// waveFour = new ConcurrentHashMap<Brain, Integer>();
-		// waveFour.put(new Explorer(), 200);
-
-		// Add waves to antSetup
-		AntSetup defaultAntSetup = new AntSetup();
-		defaultAntSetup.add(waveOne);
-		// defaultAntSetup.add(waveTwo);
-		// defaultAntSetup.add(waveThree);
-		// defaultAntSetup.add(waveFour);
-
+			wave_02 = new ConcurrentHashMap<Brain, Integer>();
+			wave_02.put(new Follower(), i * 10);
+			defaultAntSetup.add(wave_02);
+		}
+		
 		// Set default parameters
 		// Highscores to guess an number of iterations.
 		// Easy: 51
 		// Medium:
 		// Hard:
 
-		setMaxIterations(1000);
+		setMaxIterations(2500);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
 		setPheromoneEvaporation(.1f);
@@ -110,7 +102,7 @@ public class AntRunner extends Thread {
 				// Create new ants
 				for (int i = 0; i < cursor.getValue(); i++) {
 					wave.add(new Ant(cursor.getKey(), getMaxIterations(), getPheromoneAmount()));
-					//System.out.println(cursor.getKey());
+					// System.out.println(cursor.getKey());
 				}
 			}
 

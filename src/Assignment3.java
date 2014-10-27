@@ -26,8 +26,6 @@ public class Assignment3 {
 
 		// Read all locations (first is start, last is end)
 		ArrayList<int[]> tsp = readTSPlocations(new File("res/medium_coords.txt"), null);
-
-		System.out.println(tsp);
 		
 		for (int i = 0; i < tsp.size(); i++) {
 			for (int j = i + 1; j < tsp.size(); j++) {
@@ -39,7 +37,7 @@ public class Assignment3 {
 				int[] goalLoc = tsp.get(j);
 
 				System.out.println("Start: (" + startLoc[0] + "," + startLoc[1] + ")");
-				System.out.println("Start: (" + goalLoc[0] + "," + goalLoc[1] + ")");
+				System.out.println("End: (" + goalLoc[0] + "," + goalLoc[1] + ")");
 
 				try {
 

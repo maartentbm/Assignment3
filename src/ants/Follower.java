@@ -6,7 +6,7 @@ import java.util.Random;
 import maze.Path;
 import node.Node;
 
-public class Follower implements Brain {
+public class Follower extends Brain {
 
 	/**
 	 * This decides on which node to to go The Follower Brain takes the path
@@ -14,20 +14,15 @@ public class Follower implements Brain {
 	 * 
 	 * @throws Exception
 	 */
-	public Node decide(Path path) {
-		ArrayList<Node> list = path.get(path.size()-1).getNeighbours();
-		//System.out.println("Brain|follower.Decide");
+	public Node decide(Path path, ArrayList<Node> keep_away) {
+		
+		ArrayList<Node> list = getAvailableNeighbours(path, keep_away);
 		
 		Random random = new Random();
 		double sum = 0;
 		
 		// Check for every neighbouring cell
 		for (int i = 0; i < list.size(); i++) {
-
-			if(list.get(i) == null) {
-				continue;
-			}
-			
 			sum += list.get(i).getPheromoneLevel();
 		}
 		
@@ -37,20 +32,17 @@ public class Follower implements Brain {
 		int node = 0;
 		double current = 0;
 		for (int i = 0; i < list.size(); i++) {
-			
-			if(list.get(i) == null) {
-				continue;
-			}
-			
-			// TODO find out why node == 0 when it shouldn't
-			
+
 			current = list.get(i).getPheromoneLevel();
 			chosen -= current;
+			
 			if (chosen < 0) {
 				node = i;
 				break;
 			}
 		}
+		
+		System.out.println(list.get(node));
 		
 		// System.out.println("Chosen the "+node);
 		return list.get(node);

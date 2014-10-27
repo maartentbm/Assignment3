@@ -15,33 +15,12 @@ public class Ant {
 	private Brain brain;
 
 	public Path path;
-
-	public Ant(int newMaxAge, float newPheromoneAmount) {
-		brain = new Explorer();
-		maxAge = newMaxAge;
-		pheromoneAmount = newPheromoneAmount;
-	}
+	public ArrayList<Node> keep_away;
 
 	public Ant(Brain newBrain, int newMaxAge, float newPheromoneAmount) {
 		brain = newBrain;
 		maxAge = newMaxAge;
 		pheromoneAmount = newPheromoneAmount;
-	}
-
-	/**
-	 * A getter for location
-	 */
-	public int[] getLocation() {
-		return location;
-	}
-
-	/**
-	 * A setter for location
-	 * 
-	 * @param newLocation
-	 */
-	public void setLocation(int[] newLocation) {
-		location = newLocation;
 	}
 
 	/**
@@ -65,37 +44,28 @@ public class Ant {
 
 		// Create path
 		path = new Path(maze.getNode(startLocation));
+		keep_away = new ArrayList<Node>();
 
 		location = startLocation;
 		path.add(maze.getNode(location));
 
 		// First step - without predecessor
-		path.add(brain.decide(path));
+		path.add(brain.decide(path, keep_away));
 
 		// The big loop
 		//
 		for (int i = 0; i < maxAge; i++) {
 
-			System.out.println("Location: " + location[0] + " " + location[1]);
+			//System.out.println("Location: " + location[0] + " " + location[1]);
+			
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
 				spreadPheromone();
 				return;
 			}
 
-			// Max path length
-			if (path.size() > 500) {
-				System.out
-						.println("Killed " + brain + "\nReason: Path to long");
-				break;
-			}
-
 			// Collect neighbours where I can go.
-			Node nextNode = brain.decide(path);
-			if (path.contains(nextNode)) {
-				backOff(true);
-				nextNode = path.get(path.size() - 1);
-			}
+			Node nextNode = brain.decide(path, keep_away);
 
 			if (nextNode != null) {
 
@@ -103,12 +73,17 @@ public class Ant {
 				path.add(maze.getNode(location));
 
 			} else {
-				System.out.println("Can't find a next node from location ("
-						+ location[0] + ", " + location[1]
-						+ "). (previous path: " + path + ", current brain: "
-						+ this.brain + ")");
+				
+				moveBack();
+				
+//				System.out.println("Can't find a next node from location ("
+//						+ location[0] + ", " + location[1]
+//						+ "). (previous path: " + path + ", current brain: "
+//						+ this.brain + ")");
 			}
 		}
+		
+		System.out.println(path);
 		System.out.println("Killed: " + brain + "\nReason: Took to long");
 	}
 
@@ -165,28 +140,39 @@ public class Ant {
 	 * @param allowAcces
 	 */
 	private void backOff(boolean allowToReturn) {
-		int size = path.size();
-		System.out.println("Stuck on: " + path.get(size - 1) + "\nPath size: "
-				+ size);
-		for (int i = size - 1; (i >= 0)
-				&& (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+		//System.out.println("Stuck on: " + path.get(size - 1) + "\nPath size: "
+		//		+ size);
+		
+		for (int i = path.size() - 1; (i >= 0) && (accessibleNeighbours(path.get(i).getNeighbours()) < 3); i--) {
+			
 			// Step back is there are less then three accesible neighbours.
 			int[] loc = path.get(i).getLocation();
-			System.out.println("[Ant|backOff] Removing: " + loc[0] + "x"
-					+ loc[1]);
-			if (allowToReturn = false) {
+			
+//			System.out.println("[Ant|backOff] Removing: " + loc[0] + "x"
+//					+ loc[1]);
+			
+			if (allowToReturn == false) {
 				path.get(i).setPheromoneLevel(0);
 			}
+			
 			path.remove(i);
 		}
+		
 		// you are now on the old crossroad.
-		System.out.println("Backed off to :" + path.get(path.size() - 1));
+		//System.out.println("Backed off to :" + path.get(path.size() - 1));
+	}
+	
+	private void moveBack() {
+		
+		Node last = path.remove(path.size() - 1);
+		keep_away.add(last);
+		
 	}
 
 	private int accessibleNeighbours(ArrayList<Node> neighbours) {
 
 		if (neighbours == null) {
-			System.out.println("Empty neighbours list");
+			//System.out.println("Empty neighbours list");
 			return 0;
 		}
 
@@ -199,7 +185,24 @@ public class Ant {
 
 			count += neighbours.get(i).isAccessible() ? 1 : 0;
 		}
-		System.out.println("Neighbours " + count);
+		//System.out.println("Neighbours " + count);
 		return count;
+	}
+	
+
+	/**
+	 * A getter for location
+	 */
+	public int[] getLocation() {
+		return location;
+	}
+
+	/**
+	 * A setter for location
+	 * 
+	 * @param newLocation
+	 */
+	public void setLocation(int[] newLocation) {
+		location = newLocation;
 	}
 }
