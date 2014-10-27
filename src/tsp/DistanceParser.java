@@ -15,17 +15,17 @@ public class DistanceParser {
 			Location target;
 			Route route;
 			
-			int size;
+			//int size;
 			while(sc.hasNext()){
 				sourceSpoof = new Location(sc.nextInt(), sc.nextInt());
 				source = locations.get(locations.indexOf(sourceSpoof));
-				size = sc.nextInt();
+				//size = sc.nextInt();
 				
-				for(int i=0; i<size; i++){
+				//for(int i=0; i<size; i++){
 					target = new Location(sc.nextInt(), sc.nextInt());
 					route = source.getRouteTo(target);
 					route.setRoute(source, sc.nextDouble(), sc.next());
-				}
+				//}
 				
 			}
 			
