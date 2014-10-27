@@ -68,11 +68,9 @@ public class Ant {
 
 		location = startLocation;
 		path.add(maze.getNode(location));
-		ArrayList<Node> toGo = new ArrayList<Node>();
 
 		// First step - without predecessor
-		toGo = maze.getNode(location).getNeighbours();
-		path.add(brain.decide(toGo));
+		path.add(brain.decide(path));
 
 		// The big loop
 		//
@@ -93,9 +91,7 @@ public class Ant {
 			}
 
 			// Collect neighbours where I can go.
-			toGo = selectNeighbours();
-
-			Node nextNode = brain.decide(toGo);
+			Node nextNode = brain.decide(path);
 			if (path.contains(nextNode)) {
 				backOff(true);
 				nextNode = path.get(path.size() - 1);
