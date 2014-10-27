@@ -49,7 +49,7 @@ public class AntRunner extends Thread {
 
 		// First wave
 		waveOne = new ConcurrentHashMap<Brain, Integer>();
-		waveOne.put(new Explorer(), 100);
+		waveOne.put(new Explorer(), 1);
 
 		// Second wave
 		// waveTwo = new ConcurrentHashMap<Brain, Integer>();
@@ -110,7 +110,7 @@ public class AntRunner extends Thread {
 				// Create new ants
 				for (int i = 0; i < cursor.getValue(); i++) {
 					wave.add(new Ant(cursor.getKey(), getMaxIterations(), getPheromoneAmount()));
-					System.out.println(cursor.getKey());
+					//System.out.println(cursor.getKey());
 				}
 			}
 
