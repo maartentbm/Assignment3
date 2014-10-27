@@ -25,19 +25,21 @@ public class Assignment3 {
 		MazeParser mp = new MazeParser();
 
 		// Read all locations (first is start, last is end)
-		ArrayList<int[]> tsp = readTSPlocations(new File("res/hardCoord.txt"), new File("res/TSPproducts.txt"));
+		ArrayList<int[]> tsp = readTSPlocations(new File("res/medium_coords.txt"), null);
 
+		System.out.println(tsp);
+		
 		for (int i = 0; i < tsp.size(); i++) {
 			for (int j = i + 1; j < tsp.size(); j++) {
-
+				
 				// Set start location
 				int[] startLoc = tsp.get(i);
 
 				// Set goal location
 				int[] goalLoc = tsp.get(j);
 
-				System.out.println("Start: ("+startLoc[0]+","+startLoc[1]+")");
-				System.out.println("Start: ("+goalLoc[0]+","+goalLoc[1]+")");
+				System.out.println("Start: (" + startLoc[0] + "," + startLoc[1] + ")");
+				System.out.println("Start: (" + goalLoc[0] + "," + goalLoc[1] + ")");
 
 				try {
 
@@ -48,7 +50,7 @@ public class Assignment3 {
 						System.out.println("Looping!");
 
 						// Determine shortest path
-						ResultSet rs = determinePath(startLoc, goalLoc, mp.createMaze(new File("res/hard maze.txt")), null);
+						ResultSet rs = determinePath(startLoc, goalLoc, mp.createMaze(new File("res/medium maze.txt")), null);
 						shortest = rs.getShortestPath();
 
 					}
@@ -106,46 +108,50 @@ public class Assignment3 {
 		 * READ PRODUCT LOCATIONS
 		 */
 
-		// Read file ..
-		BufferedReader br = new BufferedReader(new FileReader(products));
+		if (products != null) {
 
-		// .. line by line
-		String line = null;
-		boolean first = true;
+			// Read file ..
+			BufferedReader br = new BufferedReader(new FileReader(products));
 
-		while ((line = br.readLine()) != null) {
+			// .. line by line
+			String line = null;
+			boolean first = true;
 
-			// Skip first line
-			if (first == true) {
-				first = false;
-				continue;
+			while ((line = br.readLine()) != null) {
+
+				// Skip first line
+				if (first == true) {
+					first = false;
+					continue;
+				}
+
+				// Prevent npe
+				if (line == null) {
+					continue;
+				}
+
+				// Create new scanner for file line
+				Scanner sc = new Scanner(line);
+
+				// Loop lines in file
+				while (sc.hasNextLine()) {
+
+					// Skip first int (line number)
+					sc.next();
+
+					int[] locationPair = new int[] { Integer.parseInt(sc.next().replace(",", "")), Integer.parseInt(sc.next().replace(";", "")) };
+					locations.add(locationPair);
+
+				}
+
+				// Close scanner
+				sc.close();
 			}
 
-			// Prevent npe
-			if (line == null) {
-				continue;
-			}
+			// Close BRD
+			br.close();
 
-			// Create new scanner for file line
-			Scanner sc = new Scanner(line);
-
-			// Loop lines in file
-			while (sc.hasNextLine()) {
-
-				// Skip first int (line number)
-				sc.next();
-
-				int[] locationPair = new int[] { Integer.parseInt(sc.next().replace(",", "")), Integer.parseInt(sc.next().replace(";", "")) };
-				locations.add(locationPair);
-
-			}
-
-			// Close scanner
-			sc.close();
 		}
-
-		// Close BRD
-		br.close();
 
 		/*
 		 * READ ANT START / END LOCATIONS
