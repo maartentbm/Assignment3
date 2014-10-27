@@ -3,6 +3,7 @@ package ants;
 import java.util.ArrayList;
 import java.util.Random;
 
+import maze.Path;
 import node.Node;
 
 public class Rebel implements Brain {
@@ -13,7 +14,7 @@ public class Rebel implements Brain {
 	 * @throws Exception 
 	 */
 	
-	public Node decide(ArrayList<Node> list){
+	public Node decide(ArrayList<Node> list, Path path){
 		
 		Random random = new Random();
 		
