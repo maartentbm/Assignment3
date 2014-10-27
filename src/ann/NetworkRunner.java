@@ -10,8 +10,6 @@ public class NetworkRunner {
 	
 	// Variables about the run
 	int nrEpochs;
-	double minMSE;
-	
 	
 	Network network;
 	
@@ -21,10 +19,13 @@ public class NetworkRunner {
 	}
 	
 	public void run(){
-		// @TODO import file
+		// @TODO import file		
 		
-		// @TODO loop over Epochs.
-		// @TODO loop per Epoch.
+		for(int epoch = 0; epoch < nrEpochs; epoch++){
+			
+			
+			
+		}
 	}
 	
 	private void setSettings(){

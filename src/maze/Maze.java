@@ -6,10 +6,13 @@ import ants.Ant;
 
 public class Maze extends Grid {
 
-	public void evaporate(ArrayList<Ant> antList, float pheromoneEvaporation) {
-		
-		// TODO
-		
+	public void evaporate(float pheromoneEvaporation) {
+
+	for(int i = 0; i < getWidth(); i ++){
+		for(int j = 0; j < getHeight() ; j++){
+			getGrid()[i][j].setPheromoneLevel( getGrid()[i][j].getPheromoneLevel()*(1-pheromoneEvaporation));
+		}
+	} 
 		
 	}
 

@@ -176,7 +176,7 @@ public class AntRunner extends Thread {
 				executorService.shutdown();
 			}
 
-			getMaze().evaporate(alist, getPheromoneEvaporation());
+			getMaze().evaporate(getPheromoneEvaporation());
 
 		}
 
