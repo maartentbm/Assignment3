@@ -40,7 +40,7 @@ public class Ant {
 	 * @param goalLocation
 	 */
 	public void run(Maze maze, int[] startLocation, int[] goalLocation) {
-		System.out.println("Ant started: " + brain + "\n");
+		//System.out.println("Ant started: " + brain + "\n");
 
 		// Create path
 		path = new Path(maze.getNode(startLocation));
@@ -55,8 +55,6 @@ public class Ant {
 		// The big loop
 		//
 		for (int i = 0; i < maxAge; i++) {
-
-			//System.out.println("Location: " + location[0] + " " + location[1]);
 			
 			// Goal reached?
 			if (Arrays.equals(location, goalLocation)) {
@@ -76,15 +74,10 @@ public class Ant {
 				
 				moveBack();
 				
-//				System.out.println("Can't find a next node from location ("
-//						+ location[0] + ", " + location[1]
-//						+ "). (previous path: " + path + ", current brain: "
-//						+ this.brain + ")");
 			}
 		}
 		
-		System.out.println(path);
-		System.out.println("Killed: " + brain + "\nReason: Took to long");
+		//System.out.println("Killed: " + brain + "\nReason: Took to long");
 	}
 
 	private ArrayList<Node> selectNeighbours() {
@@ -99,6 +92,7 @@ public class Ant {
 
 		list.clear();
 		list = path.get(path.size() - 1).getNeighbours();
+		
 		// We do not want to move back to where we came from.
 		list.remove(path.get(path.size() - 2));
 

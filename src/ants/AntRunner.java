@@ -52,16 +52,16 @@ public class AntRunner extends Thread {
 
 		// First wave
 		wave_01 = new ConcurrentHashMap<Brain, Integer>();
-		wave_01.put(new Explorer(), 100);
+		wave_01.put(new Explorer(), 500);
 		defaultAntSetup.add(wave_01);
 		
 		
-		for (int i = 10; i > 0; i--) {
+		/*for (int i = 10; i > 0; i--) {
 
 			wave_02 = new ConcurrentHashMap<Brain, Integer>();
 			wave_02.put(new Follower(), i * 10);
 			defaultAntSetup.add(wave_02);
-		}
+		}*/
 		
 		// Set default parameters
 		// Highscores to guess an number of iterations.
@@ -148,7 +148,7 @@ public class AntRunner extends Thread {
 			for (final Ant a : alist) {
 				tasks.add(new Callable<Void>() {
 					public Void call() {
-						System.out.println("Asynchronous task");
+						//System.out.println("Asynchronous task");
 						a.run(getMaze(), getStartLocation(), getGoalLocation());
 						return null;
 					}

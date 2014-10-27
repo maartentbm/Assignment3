@@ -25,7 +25,7 @@ public class Assignment3 {
 		MazeParser mp = new MazeParser();
 
 		// Read all locations (first is start, last is end)
-		ArrayList<int[]> tsp = readTSPlocations(new File("res/medium_coords.txt"), null);
+		ArrayList<int[]> tsp = readTSPlocations(new File("res/hardCoord.txt"), new File("res/TSPproducts.txt"));
 		
 		for (int i = 0; i < tsp.size(); i++) {
 			for (int j = i + 1; j < tsp.size(); j++) {
@@ -48,13 +48,13 @@ public class Assignment3 {
 						System.out.println("Looping!");
 
 						// Determine shortest path
-						ResultSet rs = determinePath(startLoc, goalLoc, mp.createMaze(new File("res/medium maze.txt")), null);
+						ResultSet rs = determinePath(startLoc, goalLoc, mp.createMaze(new File("res/hard maze.txt")), null);
 						shortest = rs.getShortestPath();
 
 					}
 
 					// Create result string
-					String fileString = startLoc[0] + " " + startLoc[1] + " " + goalLoc[0] + " " + goalLoc[1] + " " + shortest.size() + " " + shortest;
+					String fileString = startLoc[0] + " " + startLoc[1] + " " + goalLoc[0] + " " + goalLoc[1] + " " + shortest.size() + " " + shortest.toFileString();
 
 					// Write string to file
 					PrintWriter pw = new PrintWriter(new FileWriter("res/TSP_output.txt", true));
