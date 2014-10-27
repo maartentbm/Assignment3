@@ -100,5 +100,9 @@ public class Path extends ArrayList<Node> {
 		return str;
 
 	}
+	
+	public Node getLast() {
+		return get(size()-1);
+	}
 
 }
