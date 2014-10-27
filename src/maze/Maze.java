@@ -10,7 +10,7 @@ public class Maze extends Grid {
 
 	for(int i = 0; i < getWidth(); i ++){
 		for(int j = 0; j < getHeight() ; j++){
-			getGrid()[i][j].setPheromoneLevel( getGrid()[i][j].getPheromoneLevel()*(1-pheromoneEvaporation));
+			getGrid()[j][i].setPheromoneLevel( getGrid()[j][i].getPheromoneLevel()*(1-pheromoneEvaporation));
 		}
 	} 
 		

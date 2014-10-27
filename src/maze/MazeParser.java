@@ -14,6 +14,8 @@ import node.NodeFactory;
 
 public class MazeParser {
 
+	public static final float DEFAULT_PHEROMONE_LEVEL = 0.01f;
+	
 	public Maze createMaze(File f) {
 
 		Maze m = new Maze();
@@ -72,6 +74,7 @@ public class MazeParser {
 
 					// Add Node to grid
 					grid[y][x] = NodeFactory.createNode(sc.nextInt(), new int[] { x, y });
+					grid[y][x].setPheromoneLevel(DEFAULT_PHEROMONE_LEVEL);
 
 					// Increase x-coord
 					x++;
