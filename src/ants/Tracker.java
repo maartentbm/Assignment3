@@ -2,13 +2,12 @@ package ants;
 
 import java.util.ArrayList;
 
-import maze.Path;
 import node.Node;
 
 public class Tracker implements Brain{
 
 	@Override
-	public Node decide(ArrayList<Node> list, Path path) {
+	public Node decide(ArrayList<Node> list) {
 		double maxLevel = 0;
 		Node nodeOfChoice = list.get(0);
 		
