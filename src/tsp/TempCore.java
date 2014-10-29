@@ -13,10 +13,7 @@ public class TempCore {
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println("1;0;0;0;3;3;2;2;1;"+" || "+DistanceParser.stringInvertor("1;0;0;0;3;3;2;2;1;"));
-		Map map = new Map();
 		
-		/*
 		//New map reads[TSPproducts.txt for locations, hardCoord.txt for maze start and end]
 		//Then makes routes between them
 		Map map = new Map();
@@ -68,7 +65,7 @@ public class TempCore {
 		//Writes best and averige per eppoch to file
 		map.writeGraph("res/RememberTest");
 		map.writeRouteFile("res/test_groep7_tsp.txt");
-		*/
+		
 	}
 	
 	

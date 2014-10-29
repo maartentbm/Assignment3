@@ -28,7 +28,7 @@ public class Map {
 	
 	public Map() {
 		forgettingFactor = 0.1; 
-		pheromoneFactor = 5000;
+		pheromoneFactor = 10000;
 		RNG = new Random();
 		
 		locations = ProductsParser.read(new File("res/hardCoord.txt"), new File("res/TSPproducts.txt"));
@@ -37,7 +37,7 @@ public class Map {
 		bestDistance = -1;
 		
 		routes = RoutesParser.read(locations);
-		
+		DistanceParser.read(new File("res/TSP_output.txt"), locations);
 		
 		
 	
@@ -310,7 +310,7 @@ public class Map {
 			FileWriter fileId = new FileWriter(new File(filename));
 			PrintWriter pr = new PrintWriter(fileId);
 			
-			pr.println(bestDistance +";");
+			pr.println(Math.round(bestDistance) +";");
 			pr.println(mazeBegin.getx() +"," +mazeBegin.gety() +";");
 			
 			Location temp = mazeBegin;

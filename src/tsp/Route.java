@@ -58,13 +58,13 @@ public class Route {
 			forwardRoute = path;
 			backwardRoute = DistanceParser.stringInvertor(path);
 			length = distance;
-		}
-		if(l.equals(locations[1])){
+		}else if(l.equals(locations[1])){
 			backwardRoute = path;
 			forwardRoute = DistanceParser.stringInvertor(path);
 			length = distance;
-		}
+		}else{
 		System.out.println("Route.setRoute error");
+		}
 	}
 	
 	public String getRouteFrom(Location l){

@@ -1,0 +1,23 @@
+\documentclass{article}
+\begin{document}
+8: A regular traveling salesman problem(tsp) is a problem where there is a number of nodes that have to be "visited". These nodes are connected with paths that have a cost associated with them. In a general tsp all nodes connect to all other nodes through these paths and the point is to find the most cost effective route in which you visit all nodes once and end up back at the starting location.
+
+9: In our problem we have a starting and ending location, this means all nodes are still connected except the start and end location(you can still connect these but taking that route will be in violation with the tsp). Also the distances between the nodes will have to be calculated(trough colony optimization) as they are not given at the start of the problem.
+
+10: The size of the search space of an tsp grows exponentially as the amount of nodes increases. Using computational intelligence  we can search to a search space by looking at a local situation and moving to an optimum. This method can be far less intensive if done correctly then brute forcing an answer. This is useful for tsp because it has an exponentially growing search space as previously mentioned which makes brute forcing larger problems often impossible if not extremely time consuming.
+
+11: Our genes will represent the choice of what location to travel to from the current location. In our problem the chromosome will be represented by 19 genes(start, end and 18 pickups equals 19 travels). The genes will be encoded as an Route object as this allows us to easily manipulate extra data but these Route objects can be seen as holding the index of the location that is being traveled to(so a real value).
+
+12: The fitness of a route is $\frac{1}{distance} \cdot 10000$.
+
+13: The chance a path will be chosen increases as the amount of pheromone on that path increases. When a parent performs well on a route(see fitness) the paths in that route will have there pheromone increase more than the paths on where the parents performed less well, thus will be more likely to be chosen again by the offspring..
+
+14: The function of the genetic operations are: Mutation, to explore the search space as much as possible from often logical locations. Mutations are used to let salesman divulge from the best found path. Crossover, to speed up the process and search the space better parts of routes are combined from previous runs.  Reproduction, making sure the best route found up till now is thoughtfully explored and will be remembered.
+
+15: The route picker algorithm excludes all routes leading to previously visited locations and the start and end.
+
+16: Local minima are prevented by exploring the search space by randomized salesman at the start and during the search by using a roulette method to pick the path to take(gives possibility of mutation).
+
+17: Elitism is allowing the best performers of last run to carry over to the next run. This makes sure that best solutions are not forgotten. Our program uses this by remembering the best route upto that point and adding an amount of pheromone to its paths after each loop.
+\end{document}
+
