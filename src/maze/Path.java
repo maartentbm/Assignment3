@@ -6,6 +6,8 @@ import node.Node;
 
 public class Path extends ArrayList<Node> {
 
+	public Path() {}
+	
 	public Path(Node startNode) {
 		this.add(startNode);
 	}

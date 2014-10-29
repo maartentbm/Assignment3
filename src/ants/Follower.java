@@ -16,36 +16,48 @@ public class Follower extends Brain {
 	 */
 	public Node decide(Path path, ArrayList<Node> keep_away) {
 		
+		// Find available neighbours
 		ArrayList<Node> list = getAvailableNeighbours(path, keep_away);
 		
-		Random random = new Random();
-		double sum = 0;
-		
-		// Check for every neighbouring cell
-		for (int i = 0; i < list.size(); i++) {
-			sum += list.get(i).getPheromoneLevel();
-		}
-		
-		// We want 0 exclusive and 1 inclusive
-		// Thats why we do 1-random. It doesn't allow zero.
-		double chosen = (1 - random.nextDouble()) * sum;
-		int node = 0;
-		double current = 0;
-		for (int i = 0; i < list.size(); i++) {
-
-			current = list.get(i).getPheromoneLevel();
-			chosen -= current;
+		if (list.size() > 0) {
 			
-			if (chosen < 0) {
-				node = i;
-				break;
+			Random random = new Random();
+			double sum = 0;
+			
+			// Sum all pheromones from neighbours
+			for (int i = 0; i < list.size(); i++) {
+				sum += list.get(i).getPheromoneLevel();
 			}
+			
+			// Determine a random value in the pheromone space
+			double chosen = (1 - random.nextDouble()) * sum;
+			
+			// Find the node which's pheromone level most closely approaches this level
+			int node = 0;
+			double current = 0;
+			for (int i = 0; i < list.size(); i++) {
+
+				// Get pheromone level, subtract from sum
+				current = list.get(i).getPheromoneLevel();
+				chosen -= current;
+				
+				// If sum < 0, we have found the node
+				if (chosen < 0) {
+					node = i;
+					break;
+				}
+			}
+			
+			//System.out.println(list.get(node));
+			
+			// System.out.println("Chosen the "+node);
+			return list.get(node);
+			
+			
+		} else {
+			return null;
 		}
 		
-		System.out.println(list.get(node));
-		
-		// System.out.println("Chosen the "+node);
-		return list.get(node);
 	}
 
 	@Override

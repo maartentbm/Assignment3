@@ -50,18 +50,11 @@ public class AntRunner extends Thread {
 		// Init waves
 		ConcurrentHashMap<Brain, Integer> wave_01, wave_02;
 
-		// First wave
-		wave_01 = new ConcurrentHashMap<Brain, Integer>();
-		wave_01.put(new Explorer(), 500);
-		defaultAntSetup.add(wave_01);
-		
-		
-		/*for (int i = 10; i > 0; i--) {
-
-			wave_02 = new ConcurrentHashMap<Brain, Integer>();
-			wave_02.put(new Follower(), i * 10);
-			defaultAntSetup.add(wave_02);
-		}*/
+		for (int i = 100; i > 0; i--) {
+			wave_01 = new ConcurrentHashMap<Brain, Integer>();
+			wave_01.put(new Explorer(), 50);
+			defaultAntSetup.add(wave_01);
+		}
 		
 		// Set default parameters
 		// Highscores to guess an number of iterations.
@@ -69,10 +62,10 @@ public class AntRunner extends Thread {
 		// Medium:
 		// Hard:
 
-		setMaxIterations(2500);
+		setMaxIterations(2000);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);
-		setPheromoneEvaporation(.1f);
+		setPheromoneEvaporation(.15f);
 
 		// Create ants
 		this._createAnts(getAntSetup());
@@ -120,8 +113,8 @@ public class AntRunner extends Thread {
 	 */
 	private boolean _checkMaze(Maze maze, int[] startLocation, int[] goalLocation) {
 
-		System.out.println(maze.getNode(startLocation));
-		System.out.println(maze.getNode(goalLocation));
+//		System.out.println(maze.getNode(startLocation));
+//		System.out.println(maze.getNode(goalLocation));
 
 		return (maze.getNode(startLocation).isAccessible() && maze.getNode(goalLocation).isAccessible());
 	}
@@ -136,8 +129,12 @@ public class AntRunner extends Thread {
 		}
 
 		// Loop ant waves
-		for (ArrayList<Ant> alist : getAnts()) {
+		LinkedList<ArrayList<Ant>> antlist = getAnts();
+		ArrayList<Ant> alist;
+		for (int wave = 0; wave < antlist.size(); wave++) {
 
+			alist = antlist.get(wave);
+			
 			// Create new thread pool
 			ExecutorService executorService = Executors.newFixedThreadPool(25);
 
@@ -160,15 +157,16 @@ public class AntRunner extends Thread {
 				executorService.invokeAll(tasks);
 
 				// Display maze once its finished
-				System.out.println("==========\nAnts done!\n==========");
-
+//				System.out.println("==========\nAnts done!\n==========");
+				System.out.println();
+				
 				executorService.shutdown();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				executorService.shutdown();
 			}
 
-			getMaze().evaporate(getPheromoneEvaporation());
+			getMaze().evaporate(getPheromoneEvaporation(), this, wave);
 
 		}
 

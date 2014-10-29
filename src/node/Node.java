@@ -184,6 +184,8 @@ public abstract class Node {
 	}
 	
 	public abstract String toMazeString();
+	
+	public abstract String toPheromoneString();
 
 	public abstract boolean isAccessible();
 

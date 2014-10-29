@@ -14,7 +14,7 @@ import node.NodeFactory;
 
 public class MazeParser {
 
-	public static final float DEFAULT_PHEROMONE_LEVEL = 0.01f;
+	public static final float DEFAULT_PHEROMONE_LEVEL = 1f;
 	
 	public Maze createMaze(File f) {
 
