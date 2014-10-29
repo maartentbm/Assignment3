@@ -26,18 +26,18 @@ public class Map {
 	double bestDistance;
 	
 	
-	public Map() {
+	public Map(String Coord, String TSPproducts, String TSPpaths) {
 		forgettingFactor = 0.1; 
 		pheromoneFactor = 10000;
 		RNG = new Random();
 		
-		locations = ProductsParser.read(new File("res/hardCoord.txt"), new File("res/TSPproducts.txt"));
+		locations = ProductsParser.read(new File(Coord), new File(TSPproducts));
 		mazeBegin = locations.get(0);
 		mazeEnd = locations.get(1);
 		bestDistance = -1;
 		
 		routes = RoutesParser.read(locations);
-		DistanceParser.read(new File("res/TSP_output_new.txt"), locations);
+		DistanceParser.read(new File(TSPpaths), locations);
 		
 		
 	

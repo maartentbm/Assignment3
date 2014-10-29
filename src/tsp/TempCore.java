@@ -16,7 +16,7 @@ public class TempCore {
 		
 		//New map reads[TSPproducts.txt for locations, hardCoord.txt for maze start and end]
 		//Then makes routes between them
-		Map map = new Map();
+		Map map = new Map("res/hardCoord.txt","res/TSPproducts.txt","res/TSP_Paths_FINAL.txt");
 		
 		
 		//Run random salesman for coverage
@@ -41,9 +41,9 @@ public class TempCore {
 		System.out.println("---------------------Main---------------------/n");
 		
 		//Loop for chance based search agorithm
-		for(int i=0; i<2500; i++){
+		for(int i=0; i<5000; i++){
 			//Initializes 100 salesman and clears old list gives salesman mazeStart and mazeEnd
-			map.initSwarm(100);
+			map.initSwarm(200);
 			//Runs all salesman chance based(by formula from lecture) trough the map (Not passing to citys more then once)			
 			map.swarmRunChance();
 			//Lets all routes forget pheromone by 1-"forgettingFactor"
@@ -51,7 +51,7 @@ public class TempCore {
 			//Applys pheromone from salesman to routes
 			map.applyPheromone();	
 			//Applys pheromone of best found route(all epochs) 5 times "elitism"
-			map.applyPheromoneBestRoute(5);
+			map.applyPheromoneBestRoute(10);
 			
 			System.out.println("epoch "+i+" Fitness: " +map.averageDistance());
 		}
@@ -64,7 +64,7 @@ public class TempCore {
 		
 		//Writes best and averige per eppoch to file
 		map.writeGraph("res/RememberTest");
-		map.writeRouteFile("res/test_groep7_tsp.txt");
+		map.writeRouteFile("res/29_actions_TSP.txt");
 		
 	}
 	
