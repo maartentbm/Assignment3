@@ -18,8 +18,7 @@ public class CalculateHard {
 	 * Manually change this when a new highscore is found!
 	 */
 
-	// 928
-	public static int CURRENT_HIGHSCORE = 922;
+	public static int CURRENT_HIGHSCORE = 870;
 
 	public static void main(String[] args) throws IOException {
 

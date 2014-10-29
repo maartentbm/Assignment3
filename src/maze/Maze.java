@@ -10,7 +10,7 @@ public class Maze extends Grid {
 
 	public void evaporate(float pheromoneEvaporation, AntRunner ar, int wave) {
 
-		System.out.print(wave + " ");
+		//System.out.print(wave + " ");
 
 		// Strenghten current shortest path
 		// Path p = ar.getResults().getShortestPath();

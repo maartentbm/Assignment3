@@ -158,7 +158,7 @@ public class AntRunner extends Thread {
 
 				// Display maze once its finished
 //				System.out.println("==========\nAnts done!\n==========");
-				System.out.println();
+//				System.out.println();
 				
 				executorService.shutdown();
 			} catch (InterruptedException e) {
