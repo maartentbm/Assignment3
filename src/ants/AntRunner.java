@@ -56,12 +56,13 @@ public class AntRunner extends Thread {
 			defaultAntSetup.add(wave_01);
 		}
 		
-		// Set default parameters
-		// Highscores to guess an number of iterations.
-		// Easy: 51
-		// Medium:
-		// Hard:
 
+		// Highscores to guess an number of iterations.
+		//    Easy: 38
+		//  Medium: 133
+		//    Hard: 869
+
+		// Set default parameters
 		setMaxIterations(2000);
 		setAntSetup(defaultAntSetup);
 		setPheromoneAmount(10f);

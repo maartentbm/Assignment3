@@ -37,7 +37,7 @@ public class Map {
 		bestDistance = -1;
 		
 		routes = RoutesParser.read(locations);
-		DistanceParser.read(new File("res/TSP_output.txt"), locations);
+		DistanceParser.read(new File("res/TSP_output_new.txt"), locations);
 		
 		
 	

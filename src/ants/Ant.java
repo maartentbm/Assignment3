@@ -64,27 +64,6 @@ public class Ant {
 			// Collect neighbours where I can go.
 			Node nextNode = brain.decide(path, keep_away);
 
-			/*
-			 * LUS PREVENTION
-			 */
-
-			// Check if any neighbours are already in path (except from source)
-//			ArrayList<Node> neighbours = nextNode.getNeighbours();
-
-			// Remove origin from list
-//			Node origin = path.get(path.size() - 1);
-//			neighbours.remove(origin);
-//
-//			for(Node n: neighbours) {
-//				if(path.contains(n)) {
-//					moveBack();
-//				}
-//			}
-			
-			/*
-			 * /LUS PREVENTION
-			 */
-
 			if (nextNode != null) {
 
 				location = nextNode.getLocation();
@@ -185,14 +164,13 @@ public class Ant {
 			path.remove(i);
 		}
 
-		// you are now on the old crossroad.
+		// you are now on the old crossroads.
 		// System.out.println("Backed off to :" + path.get(path.size() - 1));
 	}
 
 	private void moveBack() {
 
 		Node last = path.remove(path.size() - 1);
-		//last.updatePheromoneLevel(-0.1f);
 		keep_away.add(last);
 
 	}

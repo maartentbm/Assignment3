@@ -19,7 +19,7 @@ public class InaccessibleNode extends Node {
 	@Override
 	public String toPheromoneString() {
 		int[] loc = getLocation();
-		return "[="+AccessibleNode.padLeft(Integer.toString(loc[0]), 2)+","+AccessibleNode.padLeft(Integer.toString(loc[1]), 2)+"]";
+		return "[=====]";
 	}
 	
 }

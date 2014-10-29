@@ -74,6 +74,9 @@ public class CalculateHard {
 							rs.printToFile(new File("res/hard_test_results.txt"));
 							System.out.println("Shorter path found!\nSize:" + newSize + "\nPath:" + shortest);
 
+						} else {
+							// Keep track of status
+							System.out.println("Found: " + newSize + ", is however not very short.");
 						}
 
 					}

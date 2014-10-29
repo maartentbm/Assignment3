@@ -17,7 +17,7 @@ public class CalculateMedium {
 	/**
 	 * Manually change this when a new highscore is found!
 	 */
-	public static int CURRENT_HIGHSCORE = 134;
+	public static int CURRENT_HIGHSCORE = 127;
 
 	public static void main(String[] args) throws IOException {
 
@@ -72,6 +72,9 @@ public class CalculateMedium {
 
 							rs.printToFile(new File("res/medium_test_results.txt"));
 							System.out.println("Shorter path found!\nSize:" + newSize + "\nPath:" + shortest);
+						} else {
+							// Keep track of status
+							System.out.println("Found: " + newSize + ", is however not very short.");
 						}
 
 					}
